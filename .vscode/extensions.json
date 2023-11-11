@@ -1,0 +1,7 @@
+{
+    "recommendations": [
+        "mf.vscode-styled-components",
+        "paulmolluzzo.convert-css-in-js",
+        "styled-components.vscode-styled-components"
+    ]
+}
