@@ -1,4 +1,4 @@
-import { StyledContainerBox, StyledProducts} from "./style";
+import { StyledProducts} from "./style";
 import { useEffect, useState } from "react";
 import { useProduct, useUser } from "./../../hooks/useProduct";
 import { useParams } from "react-router-dom";
@@ -7,6 +7,7 @@ import { useNavigate, } from "react-router-dom";
 import { FormComment } from "../../components/formComment";
 import { CommentItem } from "../../components/commentItem";
 import { StyledContainer } from './../../styles/Container';
+import {CardAdvert} from '../../components/cardAdvert';
 
 export function Products() {
   const navigate = useNavigate();
@@ -73,13 +74,36 @@ export function Products() {
         },
         advert: 123, 
         created_at: "2023-01-01T12:00:00Z", 
+      },
+      {
+        id: 1,
+        comment: "This is a mock comment.",
+        user: {
+          id: 1,
+          name: "John Doe",
+          email: "john.doe@example.com",
+          cpf: "123.456.789-01",
+          phone: "123-456-7890",
+          birth_date: new Date("1990-01-01"),
+          description: "This is a mock user description.",
+          password: "mockpassword123",
+          type_user: "client",
+          address: {
+            cep: "12345-678",
+            state: "Example State",
+            city: "Example City",
+            road: "Example Road",
+            number: "123",
+            complement: "Apt 101",
+          },
+        },
+        advert: 123, 
+        created_at: "2023-01-01T12:00:00Z", 
       }
     ],
     user: {}, // Dados mockados do usuário, substitua conforme necessário
     published: true,
   })
-
-
 
   useEffect(() => {
     const fetchAdvert = async () => {
@@ -110,8 +134,6 @@ export function Products() {
           gap="30px"
           padding="3px"
           height={'300px'}
-         
-          
         >
           <Image
             src={couverImg ? couverImg : advert?.cover_image}
@@ -125,9 +147,6 @@ export function Products() {
           />
         </Box>
 
-
-
-       
         <Box
           as="section"
           width={["100%", "30%"]}
@@ -170,7 +189,7 @@ export function Products() {
                     objectFit="cover"
                     borderRadius="10px"
                     onClick={() => setCouverImg(image.image)}
-                    border={'1px solid black'}
+                 
                   />
                 ))}
               <Image
@@ -201,7 +220,6 @@ export function Products() {
             backgroundColor="var(--grey10)"
             borderRadius="10px"
             gap="20px"
-            className="StyledContainerBox"
           > 
              <Text as="b" fontSize="3xl" color={`var(--grey2)`}>
               {advert?.brand} {advert?.model}
@@ -220,8 +238,6 @@ export function Products() {
                 justifyContent="space-between"
                 gap="10px"
               >
-                <span>{advert?.year}</span>
-                <span>{advert?.mileage} KM</span>
               </Box>
               <Text as="b" fontSize="xl" color={`var(--grey2)`}>
                 R$ {advert?.price},00
@@ -248,15 +264,19 @@ export function Products() {
               {advert?.description}
             </Text>
           </Box>
-          <Box
+        </Box> 
+        <Box
             as="article"
-            backgroundColor="var(--grey10)"
-            width="100%"
+            maxWidth="100%"
+            width="950px"
+            margin={'auto'}
+            marginTop={30}
             display="flex"
-            padding="30px 20px"
             flexDirection="column"
-            alignItems="initial"
+            padding="30px 30px"
+            backgroundColor="var(--grey10)"
             borderRadius="10px"
+            gap="20px"
           >
             <Text as="b" fontSize="xl" color={`var(--grey2)`}>
               Comentários
@@ -275,7 +295,6 @@ export function Products() {
               ))}
             </List>
           </Box>
-        </Box> 
        <Box
               as="article"
               maxWidth="100%"
@@ -288,14 +307,11 @@ export function Products() {
               backgroundColor="var(--grey10)"
               borderRadius="10px"
               gap="20px"
-              className="StyledContainerBox"
         >
        {localStorage.getItem("@TOKEN") == undefined ? (
             <></>
           )
-
             :
-
             user?.type_user !== 'admin' &&
             <Box
             as="article"
@@ -303,19 +319,36 @@ export function Products() {
             width="950px"
             margin={'auto'}
             display="flex"
-            
             flexDirection="column"
             padding="30px 30px"
             backgroundColor="var(--grey10)"
             borderRadius="10px"
             gap="20px"
-            className="StyledContainerBox"
             >
               <FormComment id={id!} />
             </Box>
-
           }
        </Box>
+
+       <h1 style={{
+          margin:'auto'
+       }}>
+        Produtos similares
+        </h1>
+
+       <StyledContainer style={{
+        backgroundColor:'var(--whiteFixed)',
+        justifyContent:"space-around",
+        width: '85%',
+        marginTop:'25px',
+        display:'flex'
+        }}>
+          <CardAdvert/>
+          <CardAdvert/>
+          <CardAdvert/>
+          <CardAdvert/>
+
+        </StyledContainer>
     </StyledProducts >
   );
 }

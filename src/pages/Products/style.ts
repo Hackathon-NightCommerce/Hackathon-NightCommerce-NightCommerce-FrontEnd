@@ -27,13 +27,3 @@ export const StyledProducts = styled.main`
   }
 
 `;
-
-export const StyledContainerBox = styled.div`
-  .css-r6wvxp{
-    width: 60%;
-  }
-
-  @media(min-width: 600px){
-    width: 60%;
-  }
-`
