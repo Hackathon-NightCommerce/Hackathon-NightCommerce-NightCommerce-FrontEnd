@@ -7,6 +7,7 @@ export const StyledProducts = styled.main`
   flex-direction: column;
   padding-top: 30px;
   background-color: transparent;
+
   .optionalImg{
     cursor:pointer;
   }
@@ -25,9 +26,14 @@ export const StyledProducts = styled.main`
     bottom: 0px;
   }
 
-  @media (min-width: 600px) {
-    flex-direction: row;
-    justify-content: center;
-    gap:20px;
-  }
 `;
+
+export const StyledContainerBox = styled.div`
+  .css-r6wvxp{
+    width: 60%;
+  }
+
+  @media(min-width: 600px){
+    width: 60%;
+  }
+`
