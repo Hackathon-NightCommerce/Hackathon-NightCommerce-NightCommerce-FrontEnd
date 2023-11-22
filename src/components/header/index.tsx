@@ -1,5 +1,6 @@
 import {
   Box,
+  Container,
   Image,
   Input,
   InputGroup,
@@ -12,6 +13,7 @@ import {
   ModalOverlay,
   Text,
   useDisclosure,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import Logo from "../../assets/logo-nome.png";
 import { Link } from "react-router-dom";
@@ -20,56 +22,73 @@ import { FaMapMarkerAlt, FaRegUser } from "react-icons/fa";
 
 export function Header({ children }: any) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  // const [isWideScreen] = useMediaQuery("(min-width: 600px)")
+  const [isLargeThan769] = useMediaQuery("(min-width: 769px)");
+
   return (
-    <Box
-      position={"relative"}
-      as={"header"}
-      backgroundColor={"var(--brand1)"}
-      height={"164px"}
-      padding={"8px"}
-    >
-      <Box
-        className="logo-card-user"
-        height={"33.333%"}
-        display={"flex"}
+    <Box as={"header"} position={"relative"} backgroundColor={"var(--brand1)"}>
+      <Container
+        maxWidth={"1300px"}
+        height={isLargeThan769 ? "100px" : "164px"}
+        padding={"10px"}
+        display={isLargeThan769 ? "flex" : "inherit"}
+        alignItems={isLargeThan769 ? "center" : "inherit"}
         justifyContent={"space-between"}
-        alignItems={"center"}
+        gap={isLargeThan769 ? "10px" : "inherit"}
       >
-        <Link to={"/"}>
-          <Image src={Logo} alt="logo" height={"30px"} />
-        </Link>
         <Box
-          className="card-user"
+          className="logo"
+          height={"33.333%"}
+          display={"flex"}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+        >
+          <Link to={"/"}>
+            <Image src={Logo} alt="logo" height={"30px"} minWidth={"216px"} />
+          </Link>
+        </Box>
+
+        <InputGroup
+          color={"white"}
+          height={"33.333%"}
+          maxWidth={isLargeThan769 ? "670px" : "inherit"}
+        >
+          <Input placeholder="Pesquisar..." />
+          <InputRightElement>
+            <IoSearchCircleOutline fontSize={"40px"} color="white" />
+          </InputRightElement>
+        </InputGroup>
+
+        <Box
+          className="location-user-cart"
           display={"flex"}
           alignItems={"center"}
-          gap={"10px"}
+          justifyContent={"space-between"}
         >
-          <IoCartOutline color="white" style={{ fontSize: "40px" }} />
-          <FaRegUser color="white" style={{ fontSize: "30px" }} />
+          <Box
+            className="location"
+            onClick={onOpen}
+            height={"33.333%"}
+            display="flex"
+            alignItems="center"
+            paddingLeft="1rem"
+            minWidth={"120px"}
+          >
+            <FaMapMarkerAlt color="white" fontSize={"20px"} />
+            <Text as="p" color="gray.500" paddingLeft={"1rem"}>
+              Informe seu CEP...
+            </Text>
+          </Box>
+          <Box
+            className="card-user"
+            display={"flex"}
+            alignItems={"center"}
+            gap={"20px"}
+          >
+            <IoCartOutline color="white" style={{ fontSize: "40px" }} />
+            <FaRegUser color="white" style={{ fontSize: "30px" }} />
+          </Box>
         </Box>
-      </Box>
-
-      <InputGroup color={"white"} height={"33.333%"}>
-        <Input placeholder="Pesquisar..." />
-        <InputRightElement>
-          <IoSearchCircleOutline fontSize={"40px"} color="white" />
-        </InputRightElement>
-      </InputGroup>
-
-      <Box
-        onClick={onOpen}
-        className="location"
-        height={"33.333%"}
-        display="flex"
-        alignItems="center"
-        paddingLeft="1rem"
-      >
-        <FaMapMarkerAlt color="white" fontSize={"20px"} />
-        <Text as="p" color="gray.500" paddingLeft={"1rem"}>
-          Informe seu CEP...
-        </Text>
-      </Box>
+      </Container>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
