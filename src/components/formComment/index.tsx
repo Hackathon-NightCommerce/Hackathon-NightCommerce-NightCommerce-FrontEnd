@@ -33,13 +33,12 @@ export const FormComment = ({ id }: IFormComment) => {
       <Button
         backgroundColor={"var(--brand1)"}
         color={"var(--grey8)"}
-        width={"40%"}
+        minWidth={"15%"}
         border={"1px solid var(--brand1)"}
         transition={"0.5s"}
         _hover={{
-          bg: "transparent",
-          color: "var(--brand1)",
           transition: "0.5s",
+          filter:'brightness(1.5)'
         }}
         borderRadius={"10px"}
         type="submit"

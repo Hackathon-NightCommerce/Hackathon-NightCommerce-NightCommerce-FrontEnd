@@ -8,6 +8,7 @@ const StyledFooter = styled.footer`
   align-items: center;
   flex-direction: column;
   width: 100%;
+  margin-top: 50px;
   a  {
     color: var(--grey10);
   }
