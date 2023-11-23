@@ -8,6 +8,8 @@ import { FormComment } from "../../components/formComment";
 import { CommentItem } from "../../components/commentItem";
 import { StyledContainer } from './../../styles/Container';
 import {CardAdvert} from '../../components/cardAdvert';
+import {ContainerList} from '../../components/listCards/style';
+import {ButtonSeeMore} from './style';
 
 export function Products() {
   const navigate = useNavigate();
@@ -211,7 +213,7 @@ export function Products() {
            <Box
             as="article"
             maxWidth="100%"
-            width="950px"
+            width="85%"
             margin={'auto'}
             marginTop={50}
             display="flex"
@@ -243,10 +245,22 @@ export function Products() {
                 R$ {advert?.price},00
               </Text>
             </Box>
-                  <button style={{
-                    backgroundColor:'blue',
-                    width:'150px'
-                  }}>Adcionar</button>
+            <Button
+                backgroundColor={"var(--brand1)"}
+                color={"var(--grey8)"}
+                minWidth={"15%"}
+                border={"1px solid var(--brand1)"}
+                transition={"0.5s"}
+                width={'150px'}
+                _hover={{
+                  transition: "0.5s",
+                  filter:'brightness(1.5)'
+                }}
+                borderRadius={"10px"}
+                type="submit"
+              >
+                Adcionar
+            </Button>
           <Box
             as="article"
             backgroundColor="var(--grey10)"
@@ -268,7 +282,7 @@ export function Products() {
         <Box
             as="article"
             maxWidth="100%"
-            width="950px"
+            width="85%"
             margin={'auto'}
             marginTop={30}
             display="flex"
@@ -295,60 +309,90 @@ export function Products() {
               ))}
             </List>
           </Box>
-       <Box
-              as="article"
-              maxWidth="100%"
-              width="950px"
-              margin={'auto'}
-              marginTop={30}
-              display="flex"
-              flexDirection="column"
-              padding="30px 30px"
-              backgroundColor="var(--grey10)"
-              borderRadius="10px"
-              gap="20px"
-        >
+
        {localStorage.getItem("@TOKEN") == undefined ? (
             <></>
           )
             :
             user?.type_user !== 'admin' &&
-            <Box
-            as="article"
-            maxWidth="100%"
-            width="950px"
-            margin={'auto'}
-            display="flex"
-            flexDirection="column"
-            padding="30px 30px"
-            backgroundColor="var(--grey10)"
-            borderRadius="10px"
-            gap="20px"
-            >
-              <FormComment id={id!} />
+            <>
+              <br/>
+              <Box
+                as="article"
+                maxWidth="100%"
+                width="85%"
+                margin={'auto'}
+                display="flex"
+                flexDirection="column"
+                padding="30px 30px"
+                backgroundColor="var(--grey10)"
+                borderRadius="10px"
+                gap="20px"
+                >
+                  <FormComment id={id!} />
             </Box>
+            </>
           }
-       </Box>
+       <br/>
 
-       <h1 style={{
-          margin:'auto'
+       <ContainerList style={{
+        display:'flex',
+        flexDirection:'column',
+        maxWidth:"100%",
+        width:'85%',
+        margin:'auto',
+        gap:'20px',
        }}>
-        Produtos similares
-        </h1>
+           <h1 style={{
+            color:'var(--brand1)',
+            fontSize:'25px',
+          
+          }}>Produtos similares</h1>
 
-       <StyledContainer style={{
-        backgroundColor:'var(--whiteFixed)',
-        justifyContent:"space-around",
-        width: '85%',
-        marginTop:'25px',
-        display:'flex'
+        <List style={{
+          maxWidth:'fit-content',
+          width:'fit-content',
+          gap:'70px',
+          justifyContent:'space-between'
         }}>
           <CardAdvert/>
           <CardAdvert/>
           <CardAdvert/>
           <CardAdvert/>
+          
+        </List>
 
-        </StyledContainer>
+       </ContainerList><br/><br/>
+
+       <ContainerList style={{
+        display:'flex',
+        flexDirection:'column',
+        maxWidth:"100%",
+        width:'85%',
+        margin:'auto',
+        gap:'20px',
+  
+       }}>
+           <h1 style={{
+            color:'var(--brand1)',
+            fontSize:'25px',
+            
+          }}>Produtos do Anunciante </h1>
+
+        <List style={{
+          maxWidth:'fit-content',
+          width:'fit-content',
+          gap:'70px',
+          justifyContent:'space-between'
+        }}>
+          <CardAdvert/>
+          <CardAdvert/>
+          <CardAdvert/>
+          <CardAdvert/>
+          
+        </List>
+       </ContainerList> 
+       <ButtonSeeMore>Ver todos os anuncios</ButtonSeeMore><br/><br/>
     </StyledProducts >
   );
 }

@@ -27,3 +27,15 @@ export const StyledProducts = styled.main`
   }
 
 `;
+
+export const ButtonSeeMore = styled.button`
+
+  background-color: var(--grey0);
+  cursor: pointer;
+  color: var(--whiteFixed);
+  width: 250px;
+  margin: auto;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 30px;
+`;
