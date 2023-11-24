@@ -7,6 +7,7 @@ export const StyledProducts = styled.main`
   flex-direction: column;
   padding-top: 30px;
   background-color: transparent;
+
   .optionalImg{
     cursor:pointer;
   }
@@ -25,9 +26,16 @@ export const StyledProducts = styled.main`
     bottom: 0px;
   }
 
-  @media (min-width: 600px) {
-    flex-direction: row;
-    justify-content: center;
-    gap:20px;
-  }
+`;
+
+export const ButtonSeeMore = styled.button`
+
+  background-color: var(--grey0);
+  cursor: pointer;
+  color: var(--whiteFixed);
+  width: 250px;
+  margin: auto;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 30px;
 `;

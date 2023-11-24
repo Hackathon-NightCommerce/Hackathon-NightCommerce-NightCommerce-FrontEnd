@@ -22,15 +22,15 @@ function Home() {
       pages.push(i + 1)
     }
   }
-
+  console.log(page?.data)
   return (
 
       <StyledHome>
         <StyledBannerPageHome>
           <img src={Banner} alt="Banner" />
-          <h1>Web Custons</h1>
+          <h1>Night Commerce</h1>
 
-          <p>A melhor plataforma de anúncios de carros do pais</p>
+          <p>A melhor plataforma de comercio eletronico</p>
         </StyledBannerPageHome>
         <br />
         <br />

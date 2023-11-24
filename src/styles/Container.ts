@@ -8,6 +8,7 @@ export const StyledContainer = styled.div`
   gap: 2rem;
   max-width: 100%;
   margin: 0 auto;
+
   @media (min-width: 600px) {
     max-width: 80%;
     flex-direction: row;
