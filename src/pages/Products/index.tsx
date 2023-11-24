@@ -278,11 +278,9 @@ export function Products() {
           gap:'70px',
           justifyContent:'space-between'
         }}>
-          {page?.data.map((product)=>{
-            return(
-              <CardAdvert advert={product} typeView={null} key={product.id}/>
-            )
-          })}
+          {page?.data.slice(0, 4).map((product) => (
+            <CardAdvert advert={product} typeView={null} key={product.id} />
+          ))}
           
         </List>
 
@@ -309,7 +307,7 @@ export function Products() {
           gap:'70px',
           justifyContent:'space-between'
         }}>
-          {announceListUser?.adverts.map((product)=>{
+          {announceListUser?.adverts.slice(0,4).map((product)=>{
               return(
                 <CardAdvert advert={product} typeView={null} key={product.id}/>
               )

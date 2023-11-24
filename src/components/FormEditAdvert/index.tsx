@@ -99,9 +99,8 @@ export const FormEditAdvert = ({
    
     // setImageInputCount(advert!.images.length)
 
-  }, [])
+  }, []);
 
-  console.log(errors);
 
   return (
     <form onSubmit={handleSubmit(submit)}>

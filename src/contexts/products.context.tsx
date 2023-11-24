@@ -71,6 +71,8 @@ interface IProductProvider {
     idAdvert: number
   ) => Promise<void>
   deleteComment: (idComment: number, idAdvert: number) => Promise<void>
+
+  uploadFile: (file: any) => void
 }
 
 export const ProductContext = createContext({} as IProductProvider)
@@ -270,6 +272,29 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
     }
   }
 
+  const uploadFile = async (file:any)=>{
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const result = await api.post('/uploadFile', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return result.status
+
+    } catch (error) {
+      toast({
+        title: `Algo deu errado aqui estamos arrumando 😁`,
+        status: "warning",
+        position: "top-right",
+        isClosable: true,
+      })
+      console.log(error)
+    }
+  }
+
   const queryParams = (data: TFilters) => {
     const queryParam = new URLSearchParams()
 
@@ -438,6 +463,9 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
         comments,
         updateComment,
         deleteComment,
+
+        //File
+        uploadFile
       }}
     >
       {children}

@@ -23,3 +23,17 @@ export const StyledPageProfile = styled.div`
     }
   }
 `
+
+export const StyledDropZone = styled.div`
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  cursor: pointer;
+
+  p{
+    font-size: 25px;
+    color: var(--brand1);
+  }
+`;
