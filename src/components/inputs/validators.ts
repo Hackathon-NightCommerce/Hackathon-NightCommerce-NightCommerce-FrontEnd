@@ -17,7 +17,7 @@ export interface SelectValidatorProps
   label: string;
   id: string;
   value?: string[] | undefined;
-  options: string[];
+  options?: string[];
   error?: string;
 }
 

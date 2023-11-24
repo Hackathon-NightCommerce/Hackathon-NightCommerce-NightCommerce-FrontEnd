@@ -1,4 +1,4 @@
-import z from "zod"
+import z, { date } from "zod"
 import { userSchema } from "./user.schema"
 
 export const imageGallerySchema = z.object({
@@ -16,20 +16,45 @@ const commentsSchema = z.object({
   }),
 })
 
+export enum CategoryProduct {
+  Informatica = "Informatica",
+  Notekook = "Notebook",
+  Impressoras = "Impressoras",
+  SmartPhones = "SmartPhones",
+  Domestico = "Domestico",
+  Tvs = "Tvs",
+  Outros = "Outros",
+}
+
 export const advertSchema = z.object({
   id: z.number(),
-  brand: z.string(),
-  model: z.string(),
-  year: z.number().or(z.string()),
-  fuel: z.string(),
-  mileage: z.number().or(z.string()),
-  color: z.string(),
-  table_fipe: z.boolean(),
-  price: z.number().or(z.string()),
+  name: z.string().refine(data => data.length > 0, {
+    message: "Por favor, forneça um nome válido para o produto.",
+  }),
+
+  brand: z.string().refine(data => data.length > 0, {
+    message: "Por favor, forneça o nome da marca do produto",
+  }),
+
+  price: z.string().refine(data=>data.length > 0,{
+      message:'Por favor, o preço minimo e 1 real'
+  }).or(z.number()),
+
   description: z.string(),
-  cover_image: z.string(),
-  published: z.boolean().optional(),
-  images: z.array(imageGallerySchema),
+
+  cover_image: z.string().refine(data=>data.length > 0,{
+    message:'Por favor, adicione uma imagem de capa'
+  }),
+
+  information_additional: z.string(),
+  category: z.nativeEnum(CategoryProduct),
+  published: z.boolean(),
+  qtd: z.string().refine(data=>data.length > 0,{
+    message:'Por favor, quantidade minima de 1 unidade'
+}).or(z.number().min(1)),
+
+  promotion: z.boolean(),
+  // images: z.array(imageGallerySchema),
   comments: z.array(commentsSchema),
   user: userSchema,
 })
@@ -38,9 +63,6 @@ export const advertSchemaValidator = advertSchema
   .omit({
     id: true,
     user: true,
-    table_fipe: true,
-    fuel: true,
-    year: true,
     comments: true,
   })
   .extend({
@@ -61,6 +83,6 @@ export type TAdvert = z.infer<typeof advertSchema>
 
 export const updateAdvertSchema = createAdvertSchemaValidator
   .partial()
-  .extend({ images: z.array(imageGallerySchema).or(z.array(z.string())) })
+  .extend({ images: z.array(imageGallerySchema).or(z.array(z.string())).optional() })
 
 export type TUpdateAdvert = z.infer<typeof updateAdvertSchema>

@@ -15,108 +15,31 @@ export function Products() {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const { userId, user } = useUser();
-  // const { getAdvert, advert } = useProduct();
+  const { userId, user,getAnnounceUser,announceListUser} = useUser();
+
+  const { getAdvert, advert, page,getAdvertsByFilter} = useProduct();
   const [couverImg, setCouverImg] = useState<string | undefined>();
-  const [advert,setAdvert]=useState({
-    id: 1,
-    brand: 'Example Brand',
-    model: 'Example Model',
-    year: '2022',
-    fuel: 'Gasoline',
-    mileage: '50000',
-    color: 'Blue',
-    table_fipe: true,
-    price: '25000',
-    description: 'This is a mock car description.',
-    cover_image: 'https://casasfreire.agilecdn.com.br/celular-motorola-moto-e13-64g-branco_331121.png?v=28-398561947',
-    images: [
-    {
-      id: 1,
-      image:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmybIJVxlemyVAYzx7vP2RpmBTVnR6HV2jB0gAec8oJS2Cii14HZnSjkEws3L1XHu-WqI&usqp=CAU'
-    },
-    {
-      id: 1,
-      image:'https://images.tcdn.com.br/img/img_prod/995671/celular_smartphone_apple_iphone_13_256gb_6_1_rosa_1465_1_6eb13f49639f12eb7f8f4a7b6c5bde51.jpg'
-    },
-    {
-      id: 1,
-      image:'https://images.tcdn.com.br/img/img_prod/995671/celular_smartphone_apple_iphone_13_256gb_6_1_rosa_1465_1_6eb13f49639f12eb7f8f4a7b6c5bde51.jpg'
-    },
-    {
-      id: 1,
-      image:'https://images.tcdn.com.br/img/img_prod/995671/celular_smartphone_apple_iphone_13_256gb_6_1_rosa_1465_1_6eb13f49639f12eb7f8f4a7b6c5bde51.jpg'
-    },{
-      id: 1,
-      image:'https://images.tcdn.com.br/img/img_prod/995671/celular_smartphone_apple_iphone_13_256gb_6_1_rosa_1465_1_6eb13f49639f12eb7f8f4a7b6c5bde51.jpg'
-    }
-  ],
-    comments: [
-      {
-        id: 1,
-        comment: "This is a mock comment.",
-        user: {
-          id: 1,
-          name: "John Doe",
-          email: "john.doe@example.com",
-          cpf: "123.456.789-01",
-          phone: "123-456-7890",
-          birth_date: new Date("1990-01-01"),
-          description: "This is a mock user description.",
-          password: "mockpassword123",
-          type_user: "client",
-          address: {
-            cep: "12345-678",
-            state: "Example State",
-            city: "Example City",
-            road: "Example Road",
-            number: "123",
-            complement: "Apt 101",
-          },
-        },
-        advert: 123, 
-        created_at: "2023-01-01T12:00:00Z", 
-      },
-      {
-        id: 1,
-        comment: "This is a mock comment.",
-        user: {
-          id: 1,
-          name: "John Doe",
-          email: "john.doe@example.com",
-          cpf: "123.456.789-01",
-          phone: "123-456-7890",
-          birth_date: new Date("1990-01-01"),
-          description: "This is a mock user description.",
-          password: "mockpassword123",
-          type_user: "client",
-          address: {
-            cep: "12345-678",
-            state: "Example State",
-            city: "Example City",
-            road: "Example Road",
-            number: "123",
-            complement: "Apt 101",
-          },
-        },
-        advert: 123, 
-        created_at: "2023-01-01T12:00:00Z", 
-      }
-    ],
-    user: {}, // Dados mockados do usuário, substitua conforme necessário
-    published: true,
-  })
+
+  useEffect(()=>{
+      getAnnounceUser(advert?.user.id!)
+  },[])
 
   useEffect(() => {
     const fetchAdvert = async () => {
       if (id) {
-        // await getAdvert(parseInt(id));
-        // setCouverImg(advert?.cover_image);
-
+        await getAdvert(parseInt(id));
+        setCouverImg(advert?.cover_image);
       }
     };
     fetchAdvert();
   }, [id]);
+
+  useEffect(()=>{
+
+    getAdvertsByFilter({category:advert?.category})
+    getAnnounceUser(advert?.user.id!)
+  
+  },[advert])
 
   return (
     <StyledProducts>
@@ -179,7 +102,7 @@ export function Products() {
               gridTemplateRows="repeat(3, 1fr)"
               
             >
-              {advert?.images &&
+              {/* {advert?.images &&
                 advert?.images.length > 1 &&
                 advert?.images.map((image) => (
                   <Image
@@ -193,7 +116,7 @@ export function Products() {
                     onClick={() => setCouverImg(image.image)}
                  
                   />
-                ))}
+                ))} */}
               <Image
                 key={advert?.cover_image}
                 src={advert?.cover_image}
@@ -224,7 +147,7 @@ export function Products() {
             gap="20px"
           > 
              <Text as="b" fontSize="3xl" color={`var(--grey2)`}>
-              {advert?.brand} {advert?.model}
+              {advert?.name}
             </Text> 
              <Box
               width="100%"
@@ -355,10 +278,9 @@ export function Products() {
           gap:'70px',
           justifyContent:'space-between'
         }}>
-          <CardAdvert/>
-          <CardAdvert/>
-          <CardAdvert/>
-          <CardAdvert/>
+          {page?.data.slice(0, 4).map((product) => (
+            <CardAdvert advert={product} typeView={null} key={product.id} />
+          ))}
           
         </List>
 
@@ -385,14 +307,15 @@ export function Products() {
           gap:'70px',
           justifyContent:'space-between'
         }}>
-          <CardAdvert/>
-          <CardAdvert/>
-          <CardAdvert/>
-          <CardAdvert/>
+          {announceListUser?.adverts.slice(0,4).map((product)=>{
+              return(
+                <CardAdvert advert={product} typeView={null} key={product.id}/>
+              )
+          })}
           
         </List>
        </ContainerList> 
-       <ButtonSeeMore>Ver todos os anuncios</ButtonSeeMore><br/><br/>
+       <ButtonSeeMore onClick={()=>navigate(`/profile/${advert?.user.id!}`)}>Ver todos os anuncios</ButtonSeeMore><br/><br/>
     </StyledProducts >
   );
 }
