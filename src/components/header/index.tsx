@@ -19,9 +19,17 @@ import Logo from "../../assets/logo-nome.png";
 import { Link } from "react-router-dom";
 import { IoCartOutline, IoSearchCircleOutline } from "react-icons/io5";
 import { FaMapMarkerAlt, FaRegUser } from "react-icons/fa";
+import { CartModal } from "../CartModal";
 
 export function Header({ children }: any) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const {
+    isOpen: isOpenCart,
+    onOpen: onOpenCart,
+    onClose: onCloseCart,
+  } = useDisclosure();
+
   const [isLargeThan769] = useMediaQuery("(min-width: 769px)");
 
   return (
@@ -83,8 +91,13 @@ export function Header({ children }: any) {
             display={"flex"}
             alignItems={"center"}
             gap={"20px"}
+            cursor={"pointer"}
           >
-            <IoCartOutline color="white" style={{ fontSize: "40px" }} />
+            <IoCartOutline
+              onClick={onOpenCart}
+              color="white"
+              style={{ fontSize: "40px" }}
+            />
             <FaRegUser color="white" style={{ fontSize: "30px" }} />
           </Box>
         </Box>
@@ -123,10 +136,7 @@ export function Header({ children }: any) {
         </ModalContent>
       </Modal>
 
-      {/* {isWideScreen ? (
-          children
-        ) : (
-        )} */}
+      <CartModal onCloseCart={onCloseCart} isOpenCart={isOpenCart} />
     </Box>
   );
 }
