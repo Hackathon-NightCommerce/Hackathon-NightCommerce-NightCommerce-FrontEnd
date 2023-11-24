@@ -5,7 +5,7 @@ import { TAdverData } from "../../interfaces/advert.interface";
 import { InputValidator, SelectValidator } from "../inputs";
 import { useProduct } from "../../hooks/useProduct";
 import { ReactNode, useEffect, useState } from "react";
-import { Button, ButtonGroup } from "@chakra-ui/react";
+import { Button, ButtonGroup, Checkbox, Input, border } from "@chakra-ui/react";
 import { StyledInputsContainer } from "./style";
 
 interface IFormCreateAdvertProps {
@@ -19,20 +19,10 @@ export const FormCreateAdvert = ({
 }: IFormCreateAdvertProps) => {
   const [imageInputCount, setImageInputCount] = useState(2);
   const {
-    getKenzieKarsByBrand,
-    getKenzieKarsInformation,
-    kenzieKarsBrands,
-    kenzieKars,
-    kenzieKarModel,
-    getKenzieKar,
     createAdvert,
   } = useProduct();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<TAdverData>({
-    mode: "onBlur",
+  const {register, handleSubmit, formState: { errors },} = useForm<TAdverData>({
+
     resolver: zodResolver(advertSchemaValidator),
   });
 
@@ -46,7 +36,7 @@ export const FormCreateAdvert = ({
           label={`${i + 1}ª da galeria`}
           placeholder="Insira a imagem de capa aqui"
           error={errors.images?.message}
-          {...register(`images.${i}`, { required: "Informe a imagem" })}
+          {...register(`images.${i}`)}
         />
       );
     }
@@ -60,85 +50,78 @@ export const FormCreateAdvert = ({
   const submit: SubmitHandler<TAdverData> = async (data) => {
     const fullData = {
       ...data,
-      table_fipe: kenzieKarModel!.value > data.price ? true : false,
-      year: Number(kenzieKarModel!.year),
-      fuel: String(kenzieKarModel!.fuel),
-      mileage: Number(data.mileage),
       price: Number(data.price),
+      qtd:Number(data.qtd)
     };
+    console.log(fullData);
     const close = await createAdvert(fullData);
     if (close) {
       onClose();
     }
   };
 
-  useEffect(() => {
-    getKenzieKarsInformation();
-  }, []);
+  console.log(errors)
 
   return (
     <form onSubmit={handleSubmit(submit)}>
-      <SelectValidator
-        id="brandSelect"
-        placeholder="Selecione Marca"
-        label="Marca"
-        options={["Selecionar", ...kenzieKarsBrands, "outro"]}
-        {...register("brand", { required: "Informe a marca" })}
-        onChange={(e) => {
-          getKenzieKarsByBrand(e.target.value);
-        }}
+      <InputValidator
+        id="name"
+        placeholder="Nome do produto"
+        label="Nome"
+        error={errors.name?.message}
+        {...register("name", { required: "Nome do produto" })}
       />
-      <SelectValidator
-        id="modelSelect"
-        label="Modelo"
-        options={["Selecionar", ...kenzieKars.map((kar) => kar.name), "outro"]}
-        placeholder="Selecione o Modelo"
-        {...register("model", { required: "Informe o modelo" })}
-        onChange={(e) => getKenzieKar(e.target.value)}
-      ></SelectValidator>
+      
+      <InputValidator
+        id="brand"
+        placeholder="Marca do produto"
+        label="Marca"
+        error={errors.brand?.message}
+        {...register("brand", { required: "Informe a marca" })}
+      />
       <StyledInputsContainer>
-        <InputValidator
-          id="year"
-          label="Ano"
-          placeholder="Ano"
-          value={kenzieKarModel?.year || ""}
-          readOnly
-        />
-        <InputValidator
-          id="fuel"
-          label="Combustível"
-          placeholder="Combustível"
-          value={kenzieKarModel?.fuel || ""}
-          readOnly
-        />
-        <InputValidator
-          id="mileage"
-          label="Quilometragem"
-          placeholder="Quilometragem"
-          error={errors.mileage?.message}
-          {...register("mileage", { required: "Informe a quilometragem" })}
-        />
-        <InputValidator
-          id="color"
-          label="Cor"
-          placeholder="Cor"
-          error={errors.color?.message}
-          {...register("color", { required: "Informe a cor" })}
-        />
-        <InputValidator
-          id="tablePrice"
-          label="Preço tabela FIPE"
-          placeholder="R$ 0.00"
-          value={kenzieKarModel?.value || ""}
-          readOnly
-        />
+
         <InputValidator
           id="price"
           label="Preço"
           placeholder="Insira o Preço"
           error={errors.price?.message}
+          type="number"
           {...register("price", { required: "Informe o preço" })}
         />
+        <InputValidator
+          id="qtd"
+          label="Quantidade"
+          placeholder="Quantidade do produto"
+          error={errors.qtd?.message}
+          type="number"
+          {...register("qtd", { required: "Informe a quantidade no estoque" })}
+        />
+
+        <Checkbox 
+        style={{
+          padding:'10px',
+          border:'1px solid var(--brand1)'
+        }}
+        id="promotion"
+        {...register("promotion", { required: "" })}
+        >
+          Esse preço e promocional ?
+        
+        </Checkbox>
+
+        <Checkbox 
+        style={{
+          padding:'10px',
+          border:'1px solid var(--brand1)'
+        }}
+        id="published"
+        defaultChecked={true}
+        {...register("published", { required: "" })}
+        >
+          Deseja deixa publicado?
+        
+        </Checkbox>
       </StyledInputsContainer>
       <InputValidator
         type="text"
@@ -148,6 +131,23 @@ export const FormCreateAdvert = ({
         error={errors.description?.message}
         {...register("description", { required: "Informe a descrição" })}
       />
+      <InputValidator
+        type="text"
+        id="information"
+        label="Informação Adcional"
+        placeholder="Informações extras do produto"
+        error={errors.information_additional?.message}
+        {...register("information_additional", { required: "Informação Adcional" })}
+      />
+      <InputValidator
+        type="text"
+        id="category"
+        label="Categoria do produto"
+        placeholder="Categoria do produto"
+        error={errors.category?.message}
+        {...register("category", { required: "Categoria do produto" })}
+      />
+
       <InputValidator
         id="cover_image"
         label="Imagem de capa"

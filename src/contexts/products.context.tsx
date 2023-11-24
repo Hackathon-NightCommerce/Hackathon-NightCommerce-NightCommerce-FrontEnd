@@ -5,7 +5,7 @@ import { TKenzieKars } from "../interfaces/kenzieKars.interface"
 import { useToast } from "@chakra-ui/react"
 import { useUser } from "./../hooks/useProduct"
 import { AxiosError } from "axios"
-import { TAdvert, TUpdateAdvert } from "../schemas/advert.schema"
+import { CategoryProduct, TAdvert, TUpdateAdvert } from "../schemas/advert.schema"
 import { TCommentRequest } from "../interfaces/comment.interface"
 
 interface iProductContextProps {
@@ -13,16 +13,18 @@ interface iProductContextProps {
 }
 
 type TFilters = {
-  brandAdvert?: string | string[]
-  modelAdvert?: string | string[]
-  colorAdvert?: string | string[]
-  fuelAdvert?: string | string[]
-  maxMileage?: number
-  minPrice?: number
-  maxYear?: number
-  minMileage?: number
-  maxPrice?: number
-  minYear?: number
+
+  name?: string | undefined;
+  brand?: string | undefined;
+  price?: number | undefined;
+  description?: string | undefined;
+  cover_image?: string | undefined;
+  information_additional?: string | null | undefined;
+  category?: CategoryProduct | undefined;
+  published?: boolean | undefined;
+  qtd?: number | undefined;
+  promotion?: boolean | undefined;
+
 }
 type TErrorResponse = {
   message: {
@@ -173,11 +175,13 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
       api.get("/adverts/"),
       api.get("/adverts/adverts-filters"),
     ])
+   
     setPage(products.data)
     setFilters(filters.data)
   }
 
   const getAdvert = async (idAdvert: number) => {
+    
     const product = await api.get(`/adverts/${idAdvert}`)
     setAdverts(product.data)
   }
@@ -270,14 +274,13 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
     const queryParam = new URLSearchParams()
 
     const filterKeys = {
-      brand: data?.brandAdvert,
-      model: data?.modelAdvert,
-      color: data?.colorAdvert,
-      fuel: data?.fuelAdvert,
-      minMileage: data?.minMileage,
-      maxMileage: data?.maxMileage,
-      minPrice: data?.minPrice,
-      maxPrice: data?.maxPrice,
+      name: data.name,
+      brand: data.brand,
+      price: data.price,
+      category: data.category,
+      published: data.published,
+      qtd:data.qtd,
+      promotion: data.promotion
     }
 
     for (const [key, value] of Object.entries(filterKeys)) {
@@ -298,6 +301,7 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
       api.get(`/adverts/filtered?${query}`),
       api.get(`/adverts/adverts-filters?${query}`),
     ])
+    
     setPage(advertsFilter.data)
     setFilters(productOption.data)
   }

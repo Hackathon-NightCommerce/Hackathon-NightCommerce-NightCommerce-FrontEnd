@@ -15,34 +15,18 @@ import image404 from "../../assets/image404.png";
 import discountImage from "../../assets/$.png";
 import { useNavigate, useParams } from "react-router-dom";
 
-// import { TAdvert } from "../../schemas/advert.schema"
+import { TAdvert } from "../../schemas/advert.schema"
+import { BottomLogicView } from "../Buttons/BottomLogicView";
 
-// interface ICardProps {
-//   advert: TAdvert
-//   typeView: "owner" | "admin" | "visitor" | null
-// }
+interface ICardProps {
+  advert: TAdvert
+  typeView: "owner" | "admin" | "visitor" | null
+}
 
-export const CardAdvert = (/*{ advert, typeView }: ICardProps*/) => {
+export const CardAdvert = ({ advert, typeView }: ICardProps) => {
   const navigate = useNavigate();
 
-  // const { id } = useParams()
-
-  const mockAdvert = {
-    id: 1,
-    name: "mouse",
-    brand: "Red Dragon",
-    price: 107.89,
-    description:
-      "Loren ipsum da bla car dsjdfd jfhksdjfhsdjfhjksdfhjksd fsdhlfsdfhsfshl",
-    information_additional: "Informação adicional aqui, bla bal bla bla",
-    category: "periféricos",
-    cover_image:
-      "https://a-static.mlcdn.com.br/280x210/mouse-gamer-x7-black-profissional-led-rgb-6000-dpi-usb-3-0-com-fio/santaclaradigital/15922213685/f0a0eb8e54be23c5b156d4a614804e6d.jpeg",
-    published: "true",
-    qtd: 20,
-    promotion: "false",
-    user_id: 1,
-  };
+  const { id } = useParams()
 
   return (
     <Card
@@ -57,7 +41,7 @@ export const CardAdvert = (/*{ advert, typeView }: ICardProps*/) => {
       borderRadius={"10px"}
       _hover={{ border: "1px solid var(--brand1)" }}
       onClick={() => {
-        navigate(`/product/${mockAdvert.id}`);
+        navigate(`/product/${advert.id}`);
       }}
     >
       <CardBody
@@ -67,8 +51,8 @@ export const CardAdvert = (/*{ advert, typeView }: ICardProps*/) => {
         padding={"0"}
       >
         <Image
-          src={mockAdvert.cover_image ? mockAdvert.cover_image : image404}
-          alt={`${mockAdvert.name}  ${mockAdvert.brand}`}
+          src={advert.cover_image ? advert.cover_image : image404}
+          alt={`${advert.name}  ${advert.brand}`}
           height={"180px"}
           width={"180px"}
           objectFit="cover"
@@ -82,7 +66,7 @@ export const CardAdvert = (/*{ advert, typeView }: ICardProps*/) => {
           width={"100%"}
           height={"175px"}
         >
-          <Heading size="sm">Mouse red dragon o mio</Heading>
+          <Heading size="sm">{advert.name}</Heading>
           <span>⭐⭐⭐⭐⭐</span>
           <Text
             fontSize="md"
@@ -97,18 +81,19 @@ export const CardAdvert = (/*{ advert, typeView }: ICardProps*/) => {
               WebkitBoxOrient: "vertical",
             }}
           >
-            {mockAdvert.description.length > 120
-              ? mockAdvert.description.slice(0, 80) + "..."
-              : mockAdvert.description}
+            {advert.description.length > 120
+              ? advert.description.slice(0, 80) + "..."
+              : advert.description}
           </Text>
           <Text
             fontSize="md"
             fontWeight={"bold"}
           >
-            R$ {mockAdvert.price}
+            R$ {advert.price}
           </Text>
         </Box>
       </CardBody>
+      <BottomLogicView typeView={typeView} idAdvert={advert.id} idUser={String(id)} />
     </Card>
   );
 };

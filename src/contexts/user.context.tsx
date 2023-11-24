@@ -22,7 +22,7 @@ interface TUserContext {
   user: TUser | null
   getUser: () => Promise<void>
   announceListUser: IAdvertsByUserId | undefined
-  getAnnounceUser: (id: string) => Promise<void>
+  getAnnounceUser: (id: number | string) => Promise<void>
   setAnnounceListUser: React.Dispatch<
     React.SetStateAction<IAdvertsByUserId | undefined>
   >
@@ -163,7 +163,7 @@ export const UserProvider = ({ children }: TUserProviderProps) => {
     return false
   }
 
-  const getAnnounceUser = async (id: string) => {
+  const getAnnounceUser = async (id: number | string) => {
     const response = await api.get(`/users/${id}/adverts/`)
     setAnnounceListUser(response.data)
   }
