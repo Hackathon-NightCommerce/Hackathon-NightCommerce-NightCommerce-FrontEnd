@@ -17,11 +17,14 @@ import {
 } from "@chakra-ui/react";
 import { FormEditComment } from "../formEditComment";
 import { useProduct, useUser } from "../../hooks/useProduct";
+import Rating from 'react-rating-stars-component';
+import { StyledStars } from "./style";
 
 interface ICommentItemProps {
   name: string;
   created_at: string;
   comment: string;
+  stars:number;
   idUserComment:number;
   idComment:number;
   idAdvert:number;
@@ -30,6 +33,7 @@ export const CommentItem = ({
   name,
   created_at,
   comment,
+  stars,
   idUserComment,
   idComment,
   idAdvert,
@@ -100,6 +104,13 @@ export const CommentItem = ({
         </CardHeader>
         <CardBody>
           <Text>{comment}</Text>
+          <StyledStars>
+          <Rating
+              count={5}
+              size={24}
+              value={stars}
+          />  
+          </StyledStars>
           { idUserComment == Number(localStorage.getItem('@ID')) ? (
 
             <>
@@ -111,7 +122,7 @@ export const CommentItem = ({
             <ModalHeader>Editar Comentario</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <FormEditComment onClose={onClose} comment={comment} idComment={idComment} idAdvert={idAdvert}>
+              <FormEditComment onClose={onClose} comment={comment} stars={stars} idComment={idComment} idAdvert={idAdvert}>
               <Button
                   width={"40%"}
                   mr={3}

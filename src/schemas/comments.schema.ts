@@ -7,6 +7,7 @@ const UserSchema = z.object({
 export const CommentsSchema = z.object({
   id: z.string(),
   comment: z.string(),
+  stars:z.number(),
   user: UserSchema,
   advert: z.number(),
   created_at: z.string(),
@@ -17,6 +18,7 @@ export const CommentSchemaRequest = CommentsSchema.omit({
   advert: true,
   user: true,
   created_at: true,
+  
 });
 
 export const CommentData = z.object({

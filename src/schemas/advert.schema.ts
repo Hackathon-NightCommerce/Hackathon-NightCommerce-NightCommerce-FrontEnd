@@ -9,6 +9,7 @@ export const imageGallerySchema = z.object({
 const commentsSchema = z.object({
   id: z.number(),
   comment: z.string(),
+  stars:z.number(),
   created_at: z.string(),
   user: z.object({
     id:z.number(),

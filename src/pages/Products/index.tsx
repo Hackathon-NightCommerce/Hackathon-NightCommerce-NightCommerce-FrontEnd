@@ -214,15 +214,17 @@ export function Products() {
             backgroundColor="var(--grey10)"
             borderRadius="10px"
             gap="20px"
+            
           >
             <Text as="b" fontSize="xl" color={`var(--grey2)`}>
               Comentários
             </Text>
-            <List display="flex" flexDirection="column" gap="1rem">
+            <List display="flex" flexDirection="column" gap="1rem" >
               {advert?.comments?.map((comment) => (
                 <CommentItem
                   key={comment.id}
                   comment={comment.comment}
+                  stars={comment.stars}
                   name={comment.user.name}
                   created_at={comment.created_at}
                   idUserComment={comment.user.id}
