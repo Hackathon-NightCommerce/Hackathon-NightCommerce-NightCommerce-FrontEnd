@@ -1,32 +1,31 @@
 import {
   Card,
   CardBody,
-  CardFooter,
   Image,
-  ListItem,
   Box,
-  Tag,
   Heading,
   Text,
-  Container,
-  CardHeader,
+  Button,
 } from "@chakra-ui/react";
 import image404 from "../../assets/image404.png";
 import discountImage from "../../assets/$.png";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { TAdvert } from "../../schemas/advert.schema"
+import { TAdvert } from "../../schemas/advert.schema";
 import { BottomLogicView } from "../Buttons/BottomLogicView";
+import { useProduct } from "../../hooks/useProduct";
 
 interface ICardProps {
-  advert: TAdvert
-  typeView: "owner" | "admin" | "visitor" | null
+  advert: TAdvert;
+  typeView: "owner" | "admin" | "visitor" | null;
 }
 
 export const CardAdvert = ({ advert, typeView }: ICardProps) => {
   const navigate = useNavigate();
 
-  const { id } = useParams()
+  const { id } = useParams();
+
+  const { onCart, setOnCart } = useProduct();
 
   return (
     <Card
@@ -85,15 +84,33 @@ export const CardAdvert = ({ advert, typeView }: ICardProps) => {
               ? advert.description.slice(0, 80) + "..."
               : advert.description}
           </Text>
-          <Text
-            fontSize="md"
-            fontWeight={"bold"}
+          <Box
+            className="price-buy"
+            display={"flex"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
           >
-            R$ {advert.price}
-          </Text>
+            <Text fontSize="md" fontWeight={"bold"}>
+              R$ {advert.price}
+            </Text>
+
+            <Button
+              type="button"
+              onClick={async (e) => {
+                e.stopPropagation();
+                await setOnCart(advert);
+              }}
+            >
+              Adicionar
+            </Button>
+          </Box>
         </Box>
       </CardBody>
-      <BottomLogicView typeView={typeView} idAdvert={advert.id} idUser={String(id)} />
+      <BottomLogicView
+        typeView={typeView}
+        idAdvert={advert.id}
+        idUser={String(id)}
+      />
     </Card>
   );
 };
