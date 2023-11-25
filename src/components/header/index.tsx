@@ -99,6 +99,7 @@ export function Header({ children }: any) {
               style={{ fontSize: "40px" }}
             />
             <FaRegUser color="white" style={{ fontSize: "30px" }} />
+
           </Box>
         </Box>
       </Container>
