@@ -6,6 +6,11 @@ import { CommentData } from "../../schemas/comments.schema";
 import { TCommentRequest } from "../../interfaces/comment.interface";
 import { Button } from "@chakra-ui/react";
 import { InputValidator } from "../inputs";
+import { Box } from '@chakra-ui/react';
+import Rating from 'react-rating-stars-component';
+import { SetStateAction, useState } from "react";
+import { StyledForm } from "./style";
+
 
 interface IFormComment {
   id: string;
@@ -14,22 +19,39 @@ interface IFormComment {
 export const FormComment = ({ id }: IFormComment) => {
   const { setComment } = useProduct();
 
+  const [rating, setRating] = useState(0);
+
+  const handleRating = (newRating:any) => {
+    setRating(newRating);
+   
+  };
+
   const { register, handleSubmit } = useForm<TCommentRequest>({
     mode: "onBlur",
     resolver: zodResolver(CommentData),
   });
 
   const submit: SubmitHandler<TCommentRequest> = async (data) => {
-    setComment(data, id);
+    const newData = {...data,stars:rating}
+    setComment(newData, id);
+
   };
 
   return (
-    <form onSubmit={handleSubmit(submit)}>
+    <StyledForm 
+    onSubmit={handleSubmit(submit)}
+    >
       <InputValidator
         id="comment"
         label="Comentário"
         {...register("comment")}
       />
+        <Rating
+          
+          count={5}
+          onChange={handleRating}
+          size={24}
+      /><br/>
       <Button
         backgroundColor={"var(--brand1)"}
         color={"var(--grey8)"}
@@ -45,6 +67,6 @@ export const FormComment = ({ id }: IFormComment) => {
       >
         Postar
       </Button>
-    </form>
+    </StyledForm>
   );
 };
