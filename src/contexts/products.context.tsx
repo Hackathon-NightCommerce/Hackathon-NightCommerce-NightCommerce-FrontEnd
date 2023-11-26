@@ -62,8 +62,9 @@ interface IProductProvider {
   advert: TAdvert | undefined;
   adminDeleteAdvert: (idAdvert: number, idUser: string) => void;
   updateAdvert: (id: number, data: TUpdateAdvert) => Promise<boolean>;
-  onCart: TAdvert[];
-  setOnCart: React.Dispatch<React.SetStateAction<any>>;
+  // Cart
+  onCart: [];
+  setOnCart: React.Dispatch<React.SetStateAction<[]>>;
 
   // Comments
   getComments: () => void;
@@ -88,7 +89,7 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
   const [kenzieKars, setKenzieKars] = useState<TKenzieKars[]>([]);
   const [kenzieKarsBrands, setKenzieKarsBrands] = useState<string[]>([]);
   const [comments, setComments] = useState([]);
-  const [onCart, setOnCart] = useState<TAdvert[]>([]);
+  const [onCart, setOnCart] = useState<[]>([]);
 
   const [kenzieKarModel, setKenzieKarModel] = useState<
     TKenzieKars | undefined
@@ -98,6 +99,14 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
   const { getAnnounceUser, announceListUser } = useUser();
   const id = localStorage.getItem("@ID");
   const token = localStorage.getItem("@TOKEN");
+
+  const createCart = async () => {
+    try {
+      await api.post(`/cart`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const adminDeleteAdvert = async (idAdvert: number, idUser: string) => {
     try {
@@ -197,7 +206,6 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
     idComment: number,
     idAdvert: number
   ) => {
-
     try {
       await api.patch(`/comments/${idComment}`, comment, {
         headers: {

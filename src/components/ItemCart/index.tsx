@@ -16,20 +16,6 @@ type TItemprops = {
 };
 
 export const ItemCart = ({ item }: TItemprops) => {
-  const [amount, setAmount] = useState(0);
-
-  const stopOnZero = () => {
-    if (amount == 0) {
-      setAmount(0);
-    } else {
-      setAmount(amount - 1);
-    }
-  };
-
-  const stopOnMax = () => {
-    setAmount(amount + 1);
-  };
-
   return (
     <Box
       as="li"
@@ -49,12 +35,16 @@ export const ItemCart = ({ item }: TItemprops) => {
       <Text>R$ {item.price}</Text>
       <ButtonGroup size="sm" isAttached variant="outline">
         <IconButton
-          onClick={stopOnZero}
+          onClick={item.quantItem - 1}
           aria-label="Remove"
           icon={<MinusIcon />}
         />
-        <Button>{amount}</Button>
-        <IconButton onClick={stopOnMax} aria-label="Add" icon={<AddIcon />} />
+        <Button>{item.quantItem}</Button>
+        <IconButton
+          onClick={item.quantItem + 1}
+          aria-label="Add"
+          icon={<AddIcon />}
+        />
       </ButtonGroup>
     </Box>
   );
