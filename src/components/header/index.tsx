@@ -20,9 +20,12 @@ import { Link } from "react-router-dom";
 import { IoCartOutline, IoSearchCircleOutline } from "react-icons/io5";
 import { FaMapMarkerAlt, FaRegUser } from "react-icons/fa";
 import { CartModal } from "../CartModal";
+import { useEffect } from "react";
+import { useProduct } from "../../hooks/useProduct";
 
 export function Header({ children }: any) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { getProductsSalveAtCart} = useProduct();
 
   const {
     isOpen: isOpenCart,
@@ -31,6 +34,12 @@ export function Header({ children }: any) {
   } = useDisclosure();
 
   const [isLargeThan769] = useMediaQuery("(min-width: 769px)");
+
+  useEffect(()=>{
+    
+    getProductsSalveAtCart()
+    
+  },[])
 
   return (
     <Box as={"header"} position={"relative"} backgroundColor={"var(--brand1)"}>

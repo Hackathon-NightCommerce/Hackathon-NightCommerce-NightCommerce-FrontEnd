@@ -6,6 +6,7 @@ import { Products } from "../pages/Products"
 import RecoverPassword from "../pages/RecoverPassword"
 import { ProfilePages } from "../pages/ProfilePages"
 import { About } from "../pages/About"
+import { ConfirmAccount } from "../pages/ConfirmAccont"
 
 function RoutePages() {
   return (
@@ -16,6 +17,7 @@ function RoutePages() {
       <Route path="/profile/:id" element={<ProfilePages />} />
       <Route path="/product/:id" element={<Products />} />
       <Route path="/recoverPassword/:token" element={<RecoverPassword />} />
+      <Route path="/confirmAccont/:id" element={<ConfirmAccount/>}/>
       <Route path="/about" element={<About />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>

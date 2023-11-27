@@ -20,7 +20,7 @@ type TItemprops = {
 
 export const ItemCart = ({ item }: TItemprops) => {
 
-  const { onCart,setOnCart,setTotal} = useProduct();
+  const { onCart,setOnCart,setTotal,total} = useProduct();
   const [qtdItem,setQtdItem] = useState<number>(item.itemCart);
 
 
@@ -82,10 +82,19 @@ export const ItemCart = ({ item }: TItemprops) => {
         />
         <button
         onClick={()=>removerItensCart(item.id)}
+        style={{
+          marginLeft:'15px',
+          cursor:'pointer',
+          padding:'5px',
+          borderRadius:'10px',
+          backgroundColor:'var(--alert1)',
+          color:'var(--whiteFixed)'
+        }}
         >
           Remover
         </button>
       </ButtonGroup>
+      
     </Box>
   );
 };
