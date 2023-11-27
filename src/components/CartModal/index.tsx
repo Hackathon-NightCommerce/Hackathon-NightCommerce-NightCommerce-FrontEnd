@@ -11,9 +11,32 @@ import {
 } from "@chakra-ui/react";
 import { useProduct } from "../../hooks/useProduct";
 import { ItemCart } from "../ItemCart";
+import { useEffect, useState } from "react";
 
 export const CartModal = ({ onCloseCart, isOpenCart }: any) => {
-  const { onCart } = useProduct();
+  const { onCart,total,setTotal} = useProduct();
+
+
+  useEffect(()=>{
+    const arrayPrice: number[] = [] 
+
+    onCart.map((item)=>{
+      
+      if(item.itemCart === undefined){
+        arrayPrice.push(Number(item.price))
+    
+      }else{
+        arrayPrice.push(Number(item.price) * item.itemCart)
+       
+      }
+    })
+    const total = arrayPrice.reduce((accumulator, currentProduct) => {
+      return accumulator + currentProduct;
+    }, 0);
+
+    setTotal(total)
+
+  },[onCart]);
 
   return (
     <Modal
@@ -37,9 +60,11 @@ export const CartModal = ({ onCloseCart, isOpenCart }: any) => {
           </Box>
         </ModalBody>
         <ModalFooter>
+          {total}
           <Button variant="ghost" onClick={onCloseCart}>
             Fechar
           </Button>
+          
           <Button colorScheme="blue" mr={3}>
             Comprar
           </Button>

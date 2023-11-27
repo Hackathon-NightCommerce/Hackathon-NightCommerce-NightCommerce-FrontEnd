@@ -8,28 +8,49 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { MinusIcon, AddIcon } from "@chakra-ui/icons";
-import { useState } from "react";
-import { TAdvert } from "../../interfaces/advert.interface";
+import { useEffect, useState } from "react";
+import { TAdvert, TAdvertItensCart } from "../../interfaces/advert.interface";
+import { useProduct } from "../../hooks/useProduct";
 
 type TItemprops = {
-  item: TAdvert;
+  item: TAdvertItensCart;
 };
 
+
+
 export const ItemCart = ({ item }: TItemprops) => {
-  const [amount, setAmount] = useState(0);
 
-  const stopOnZero = () => {
-    if (amount == 0) {
-      setAmount(0);
-    } else {
-      setAmount(amount - 1);
-    }
+  const { onCart,setOnCart,setTotal} = useProduct();
+  const [qtdItem,setQtdItem] = useState<number>(item.itemCart);
+
+
+  const removerItensCart = (idCart: number) => {
+    const updatedCart = onCart.filter(item => item.id !== idCart);
+    setOnCart(updatedCart);
   };
 
-  const stopOnMax = () => {
-    setAmount(amount + 1);
-  };
+  useEffect(()=>{
+    item.itemCart = qtdItem
+    const arrayPrice: number[] = [] 
 
+    onCart.map((item)=>{
+      
+      if(item.itemCart === undefined){
+        arrayPrice.push(Number(item.price))
+        
+      }else{
+        arrayPrice.push(Number(item.price) * item.itemCart)
+        
+      }
+    })
+    const total = arrayPrice.reduce((accumulator, currentProduct) => {
+      return accumulator + currentProduct;
+    }, 0);
+
+    setTotal(total)
+
+  },[qtdItem])
+  
   return (
     <Box
       as="li"
@@ -49,12 +70,21 @@ export const ItemCart = ({ item }: TItemprops) => {
       <Text>R$ {item.price}</Text>
       <ButtonGroup size="sm" isAttached variant="outline">
         <IconButton
-          onClick={stopOnZero}
+          onClick={()=>setQtdItem(qtdItem - 1 === 0 ? qtdItem : qtdItem - 1)}
           aria-label="Remove"
           icon={<MinusIcon />}
         />
-        <Button>{amount}</Button>
-        <IconButton onClick={stopOnMax} aria-label="Add" icon={<AddIcon />} />
+        <Button>{qtdItem}</Button>
+        <IconButton
+          onClick={()=>setQtdItem(qtdItem + 1)}
+          aria-label="Add"
+          icon={<AddIcon />}
+        />
+        <button
+        onClick={()=>removerItensCart(item.id)}
+        >
+          Remover
+        </button>
       </ButtonGroup>
     </Box>
   );

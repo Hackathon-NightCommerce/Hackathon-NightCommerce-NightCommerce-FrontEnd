@@ -27,6 +27,32 @@ export const CardAdvert = ({ advert, typeView }: ICardProps) => {
 
   const { onCart, setOnCart } = useProduct();
 
+  const productAlreadyExist = (advert: TAdvert) => {
+    const findItem = onCart.find((item: any) => item.id === advert.id);
+
+    if (findItem !== undefined) {
+      // Se o item já existe no carrinho, atualize apenas a quantidade
+      setOnCart((prevItems: any) => {
+        return prevItems.map((item: any) => {
+          if (item.id === advert.id) {
+            return {
+              ...item,
+              itemCart: item.itemCart + 1,
+            };
+          }
+          return item;
+        });
+      });
+    } else {
+      // Se o item não existe no carrinho, adicione-o ao carrinho
+      const newItem = {
+        ...advert,
+        itemCart: 1,
+      };
+      setOnCart((prevItems: any) => [...prevItems, newItem]);
+    }
+  };
+
   return (
     <Card
       as="li"
@@ -98,7 +124,8 @@ export const CardAdvert = ({ advert, typeView }: ICardProps) => {
               type="button"
               onClick={async (e) => {
                 e.stopPropagation();
-                await setOnCart(advert);
+                // setOnCart([...onCart,advert])
+                productAlreadyExist(advert)
               }}
             >
               Adicionar

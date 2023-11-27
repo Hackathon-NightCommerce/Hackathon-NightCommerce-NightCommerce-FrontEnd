@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useState } from "react";
-import { TCreateAdvertData, TPagination } from "../interfaces/advert.interface";
+import { TAdvertItensCart, TCreateAdvertData, TPagination } from "../interfaces/advert.interface";
 import { api, apiKenzie } from "../services/api";
 import { TKenzieKars } from "../interfaces/kenzieKars.interface";
 import { useToast } from "@chakra-ui/react";
@@ -62,8 +62,11 @@ interface IProductProvider {
   advert: TAdvert | undefined;
   adminDeleteAdvert: (idAdvert: number, idUser: string) => void;
   updateAdvert: (id: number, data: TUpdateAdvert) => Promise<boolean>;
-  onCart: TAdvert[];
-  setOnCart: React.Dispatch<React.SetStateAction<any>>;
+  // Cart
+  onCart: TAdvertItensCart[];
+  setOnCart: React.Dispatch<React.SetStateAction<TAdvertItensCart[]>>;
+  total: number
+  setTotal: React.Dispatch<React.SetStateAction<number>>
 
   // Comments
   getComments: () => void;
@@ -88,7 +91,8 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
   const [kenzieKars, setKenzieKars] = useState<TKenzieKars[]>([]);
   const [kenzieKarsBrands, setKenzieKarsBrands] = useState<string[]>([]);
   const [comments, setComments] = useState([]);
-  const [onCart, setOnCart] = useState<TAdvert[]>([]);
+  const [onCart, setOnCart] = useState<TAdvertItensCart[]>([]);
+  const [total, setTotal] = useState<number>(0.0);
 
   const [kenzieKarModel, setKenzieKarModel] = useState<
     TKenzieKars | undefined
@@ -98,6 +102,14 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
   const { getAnnounceUser, announceListUser } = useUser();
   const id = localStorage.getItem("@ID");
   const token = localStorage.getItem("@TOKEN");
+
+  const createCart = async () => {
+    try {
+      await api.post(`/cart`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const adminDeleteAdvert = async (idAdvert: number, idUser: string) => {
     try {
@@ -197,7 +209,6 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
     idComment: number,
     idAdvert: number
   ) => {
-
     try {
       await api.patch(`/comments/${idComment}`, comment, {
         headers: {
@@ -466,6 +477,8 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
         updateAdvert,
         onCart,
         setOnCart,
+        setTotal,
+        total,
 
         // Comments
         getComments,

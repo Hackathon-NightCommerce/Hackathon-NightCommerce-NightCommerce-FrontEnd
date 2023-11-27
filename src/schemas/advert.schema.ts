@@ -60,6 +60,10 @@ export const advertSchema = z.object({
   user: userSchema,
 })
 
+export const AdvertSchemaToItensCart = advertSchema.extend({
+ itemCart: z.number()
+})
+
 export const advertSchemaValidator = advertSchema
   .omit({
     id: true,
