@@ -37,7 +37,7 @@ export const CardAdvert = ({ advert, typeView }: ICardProps) => {
           if (item.id === advert.id) {
             return {
               ...item,
-              quantItem: item.quantItem + 1,
+              itemCart: item.itemCart + 1,
             };
           }
           return item;
@@ -47,7 +47,7 @@ export const CardAdvert = ({ advert, typeView }: ICardProps) => {
       // Se o item não existe no carrinho, adicione-o ao carrinho
       const newItem = {
         ...advert,
-        quantItem: 1,
+        itemCart: 1,
       };
       setOnCart((prevItems: any) => [...prevItems, newItem]);
     }
@@ -124,7 +124,8 @@ export const CardAdvert = ({ advert, typeView }: ICardProps) => {
               type="button"
               onClick={async (e) => {
                 e.stopPropagation();
-                productAlreadyExist(advert);
+                // setOnCart([...onCart,advert])
+                productAlreadyExist(advert)
               }}
             >
               Adicionar
