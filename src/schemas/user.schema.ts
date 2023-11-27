@@ -72,3 +72,23 @@ export const userRegisterSchema = z.object({
       ...data.address,
     },
   }))
+
+  export const userSchemaResponseItemsCart = userSchema.omit({password:true,address:true,}).extend({
+    itemsCart:z.array(z.object({
+      id:z.number(),
+      qtd:z.number(),
+      price:z.number(),
+      advert_id:z.object({
+        id: z.number(),
+        name: z.string(),
+        brand: z.string(),
+        price: z.number(),
+        description: z.string(),
+        cover_image: z.string(),
+        information_additional: z.string(),
+        category: z.string(),
+        published: z.boolean(),
+        qtd: z.number(),
+        promotion: z.boolean(),
+      })
+    }))})

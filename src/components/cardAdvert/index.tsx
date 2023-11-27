@@ -8,7 +8,6 @@ import {
   Button,
 } from "@chakra-ui/react";
 import image404 from "../../assets/image404.png";
-import discountImage from "../../assets/$.png";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { TAdvert } from "../../schemas/advert.schema";
@@ -31,7 +30,6 @@ export const CardAdvert = ({ advert, typeView }: ICardProps) => {
     const findItem = onCart.find((item: any) => item.id === advert.id);
 
     if (findItem !== undefined) {
-      // Se o item já existe no carrinho, atualize apenas a quantidade
       setOnCart((prevItems: any) => {
         return prevItems.map((item: any) => {
           if (item.id === advert.id) {
@@ -44,7 +42,6 @@ export const CardAdvert = ({ advert, typeView }: ICardProps) => {
         });
       });
     } else {
-      // Se o item não existe no carrinho, adicione-o ao carrinho
       const newItem = {
         ...advert,
         itemCart: 1,
@@ -92,7 +89,7 @@ export const CardAdvert = ({ advert, typeView }: ICardProps) => {
           height={"175px"}
         >
           <Heading size="sm">{advert.name}</Heading>
-          <span>⭐⭐⭐⭐⭐</span>
+          
           <Text
             fontSize="md"
             color={`var(--grey2)`}
@@ -124,7 +121,6 @@ export const CardAdvert = ({ advert, typeView }: ICardProps) => {
               type="button"
               onClick={async (e) => {
                 e.stopPropagation();
-                // setOnCart([...onCart,advert])
                 productAlreadyExist(advert)
               }}
             >

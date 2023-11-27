@@ -1,4 +1,4 @@
-import z, { date } from "zod"
+import z from "zod"
 import { userSchema } from "./user.schema"
 
 export const imageGallerySchema = z.object({
@@ -60,7 +60,10 @@ export const advertSchema = z.object({
   user: userSchema,
 })
 
-export const AdvertSchemaToItensCart = advertSchema.extend({
+export const AdvertSchemaToItensCart = advertSchema.omit({
+  comments:true,
+  user:true
+}).extend({
  itemCart: z.number()
 })
 

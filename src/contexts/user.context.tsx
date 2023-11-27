@@ -5,7 +5,7 @@ import { IAdvertsByUserId } from "../schemas/advertsByUserId.schema"
 import { useToast } from "@chakra-ui/react"
 import { useNavigate } from "react-router-dom"
 import { LoginData } from "../pages/Login/validators"
-import { AxiosError } from "axios"
+import { AxiosError, AxiosResponse } from "axios"
 
 interface TUserProviderProps {
   children: ReactNode
@@ -37,6 +37,7 @@ interface TUserContext {
   updateForgoutPassword: (password: string, token: string) => void
   forgotPassword: boolean
   setForgotPassword: React.Dispatch<React.SetStateAction<boolean>>
+  confirmAccount: (idUser: number) => Promise<AxiosResponse<any, any> | undefined>
 }
 
 export const UserContext = createContext({} as TUserContext)
@@ -114,6 +115,34 @@ export const UserProvider = ({ children }: TUserProviderProps) => {
     }
   }
 
+  const confirmAccount = async (idUser:number)=>{
+    try {
+        const result = await api.patch(`/users/${idUser}/confirmedAccount`)
+        return result
+
+    } catch (error) {
+      if ((error as AxiosError).response?.status != 500) {
+        const err = error as AxiosError<TErrorResponse>
+        console.log(err)
+
+        toast({
+          title: `${err.response?.data.message}`,
+          status: "error",
+          position: "top-right",
+          isClosable: true,
+        })
+      } else {
+        toast({
+          title: `Algo deu errado aqui estamos arrumando 😔`,
+          status: "warning",
+          position: "top-right",
+          isClosable: true,
+        })
+        console.log(error)
+      }
+    }
+  }
+
   const getUser = async () => {
     try {
       if (userId) {
@@ -187,6 +216,7 @@ export const UserProvider = ({ children }: TUserProviderProps) => {
         position: "top-right",
         isClosable: true,
       })
+     
       setTimeout(() => {
         navigate(profileRoute);
       }, 1500);
@@ -322,6 +352,7 @@ export const UserProvider = ({ children }: TUserProviderProps) => {
         updateForgoutPassword,
         forgotPassword,
         setForgotPassword,
+        confirmAccount
       }}
     >
       {children}
