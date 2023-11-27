@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { useProduct } from "../../hooks/useProduct";
 import { ItemCart } from "../ItemCart";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export const CartModal = ({ onCloseCart, isOpenCart }: any) => {
   const { onCart,total,setTotal} = useProduct();

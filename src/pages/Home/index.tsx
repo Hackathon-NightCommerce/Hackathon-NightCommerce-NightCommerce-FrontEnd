@@ -2,10 +2,11 @@ import { StyledHome, StyledBannerPageHome, StyledSection } from "./style";
 import Banner from "../../assets/banner_bmw.png";
 import { Button, ButtonGroup, Box } from "@chakra-ui/react";
 import { useProduct, useUser } from "../../hooks/useProduct";
-import { AsideFilters } from "../../components/aside";
 import { StyledContainer } from "../../styles/Container";
 import { useEffect } from "react";
 import { ListCards } from "../../components/listCards";
+import { CarouselCategors } from "../../components/CarouselCategors/CarouselCategors";
+import AsideFilters from "../../components/AsideFilters";
 
 function Home() {
   const {
@@ -41,6 +42,7 @@ function Home() {
       <br />
       <br />
 
+      <CarouselCategors />
       <StyledContainer>
         <AsideFilters />
         <StyledSection>

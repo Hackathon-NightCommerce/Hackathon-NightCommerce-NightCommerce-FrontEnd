@@ -40,11 +40,11 @@ export const SelectValidator = forwardRef<HTMLSelectElement, SelectValidatorProp
       <Container>
         <label htmlFor={id}>{label}</label>
         <select id={id} ref={ref} {...rest}>
-          {/* {options.map((option, index) => (
+          {options!.map((option, index) => (
             <option key={option} value={value ? value[index] : option}>
               {option}
             </option>
-          ))} */}
+          ))}
         </select>
         <p> {error && error}</p>
       </Container>

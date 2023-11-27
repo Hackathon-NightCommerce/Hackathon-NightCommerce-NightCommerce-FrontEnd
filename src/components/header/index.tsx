@@ -4,11 +4,9 @@ import {
   Image,
   Input,
   InputGroup,
-  InputLeftElement,
   InputRightElement,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalOverlay,
   Text,
@@ -17,12 +15,33 @@ import {
 } from "@chakra-ui/react";
 import Logo from "../../assets/logo-nome.png";
 import { Link } from "react-router-dom";
-import { IoCartOutline, IoSearchCircleOutline } from "react-icons/io5";
-import { FaMapMarkerAlt, FaRegUser } from "react-icons/fa";
+import { IoCartOutline } from "react-icons/io5";
+import { CiSearch } from "react-icons/ci";
+import { FaMapMarkerAlt } from "react-icons/fa";
 import { CartModal } from "../CartModal";
+import { useState } from "react";
+import { useProduct } from "../../hooks/useProduct";
 
-export function Header({ children }: any) {
+interface HeaderProps {
+  children?: React.ReactNode;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function Header({ children }: HeaderProps) {
+  const { getAdvertsSherad } = useProduct();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      getAdvertsSherad(searchTerm);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
 
   const {
     isOpen: isOpenCart,
@@ -56,13 +75,24 @@ export function Header({ children }: any) {
         </Box>
 
         <InputGroup
-          color={"white"}
-          height={"33.333%"}
+          color={"#B0A6F0"}
           maxWidth={isLargeThan769 ? "670px" : "inherit"}
+          alignItems="center"
         >
-          <Input placeholder="Pesquisar..." />
-          <InputRightElement>
-            <IoSearchCircleOutline fontSize={"40px"} color="white" />
+          <Input
+            placeholder="Pesquisar..."
+            value={searchTerm}
+            onChange={handleChange}
+            onKeyPress={handleKeyPress}
+            focusBorderColor={"white"}
+            color={"white"}
+          />
+          <InputRightElement display="flex" align-item="flex-start">
+            <CiSearch
+              fontSize={"25px"}
+              color="white"
+              onClick={() => getAdvertsSherad(searchTerm)}
+            />
           </InputRightElement>
         </InputGroup>
 
@@ -71,6 +101,7 @@ export function Header({ children }: any) {
           display={"flex"}
           alignItems={"center"}
           justifyContent={"space-between"}
+          gap={5}
         >
           <Box
             className="location"
@@ -98,8 +129,7 @@ export function Header({ children }: any) {
               color="white"
               style={{ fontSize: "40px" }}
             />
-            <FaRegUser color="white" style={{ fontSize: "30px" }} />
-
+            {children}
           </Box>
         </Box>
       </Container>
@@ -136,7 +166,6 @@ export function Header({ children }: any) {
           </ModalBody>
         </ModalContent>
       </Modal>
-
       <CartModal onCloseCart={onCloseCart} isOpenCart={isOpenCart} />
     </Box>
   );

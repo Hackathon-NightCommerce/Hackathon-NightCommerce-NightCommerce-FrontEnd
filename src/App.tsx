@@ -4,13 +4,10 @@ import ResetCSS from "./styles/ResetCSS"
 import { ChakraProvider } from "@chakra-ui/react"
 import { Footer } from "./components/footer/index"
 import { Header } from "./components/header/index"
-import { useUser } from "./hooks/useProduct"
-import { UserHeader } from "./components/userHeader/index"
-import { LoginRegisterButtons } from "./components/Buttons/LoginAndRegister/index"
 import { extendTheme } from "@chakra-ui/react"
+import { ProfileButton } from "./components/ProfileButton/ProfileButton"
 
 export function App() {
-  const { user } = useUser()
 
   const breakpoints = {
     base: "0px",
@@ -32,7 +29,7 @@ export function App() {
   return (
     <>
       <ChakraProvider theme={theme}>
-        <Header>{user ? <UserHeader /> : <LoginRegisterButtons />}</Header>
+        <Header><ProfileButton/></Header>
         <ResetCSS />
         <GlobalStyle />
         <RoutePages />

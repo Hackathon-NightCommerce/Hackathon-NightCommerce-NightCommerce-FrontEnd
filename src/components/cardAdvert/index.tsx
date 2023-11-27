@@ -8,7 +8,6 @@ import {
   Button,
 } from "@chakra-ui/react";
 import image404 from "../../assets/image404.png";
-import discountImage from "../../assets/$.png";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { TAdvert } from "../../schemas/advert.schema";
