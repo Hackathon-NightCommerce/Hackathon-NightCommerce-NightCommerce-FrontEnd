@@ -12,8 +12,6 @@ import { TAdvert, TUpdateAdvert } from "../schemas/advert.schema";
 import { TCommentRequest } from "../interfaces/comment.interface";
 import {CartShemaRequest} from '../interfaces/cart.interfaces';
 import { TProductsUserSalveAtCart } from "../interfaces/user.interface";
-import {useNavigate} from 'react-router-dom';
-
 interface iProductContextProps {
   children: ReactNode;
 }
@@ -66,7 +64,7 @@ interface IProductProvider {
   onCart: TAdvertItensCart[];
   setOnCart: React.Dispatch<React.SetStateAction<TAdvertItensCart[]>>;
   total: number;
-  setTotal: React.Dispatch<React.SetStateAction<number>>;;
+  setTotal: React.Dispatch<React.SetStateAction<number>>;
   createCart: (products: CartShemaRequest) => Promise<void>;
   getProductsSalveAtCart: () => Promise<void>;
   payment: (products: CartShemaRequest) => Promise<void>
@@ -135,7 +133,70 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
       console.log(error);
     }
   };
+  const getProductsSalveAtCart = async():Promise<void>=>{
+    try {
+      const products:TProductsUserSalveAtCart = (await api.get('/cart',{
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })).data
+        const cartItems: TAdvertItensCart[] = products.itemsCart.map((item) => ({
+          id: item.advert_id.id,
+          name: item.advert_id.name,
+          brand: item.advert_id.brand,
+          price: item.advert_id.price,
+          description: item.advert_id.description,
+          cover_image: item.advert_id.cover_image,
+          information_additional: item.advert_id.information_additional,
+          category: item.advert_id.category as CategoryProduct,
+          published: item.advert_id.published,
+          qtd:item.advert_id.qtd,
+          itemCart:item.qtd,
+          promotion:item.advert_id.promotion,
+      }));
+      setOnCart(cartItems);
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
 
+  const payment = async(products:CartShemaRequest):Promise<void>=>{
+    setSpinnerCart(true)
+    try {
+      const linkPay:string = (await api.post('/payment',products,{
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })).data
+
+      setSpinnerCart(false)
+      window.location.href = linkPay;
+
+    } catch (error) {
+      if ((error as AxiosError).response?.status != 500) {
+        const err = error as AxiosError<TErrorResponse>;
+     
+          toast({
+            title: `${err.response?.data.message}`,
+            status: "error",
+            position: "top-right",
+            isClosable: true,
+          });
+          setSpinnerCart(false)
+        }
+       else {
+        toast({
+          title: `Algo deu errado aqui estamos arrumando 😁`,
+          status: "warning",
+          position: "top-right",
+          isClosable: true,
+        });
+        console.log(error);
+      }
+    }
+  }
   const updateAdvert = async (id: number, data: TUpdateAdvert) => {
     const { ...rest } = data;
     try {
