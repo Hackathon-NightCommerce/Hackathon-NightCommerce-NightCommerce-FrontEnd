@@ -71,9 +71,14 @@ export const advertSchema = z.object({
   user: userSchema,
 });
 
-export const AdvertSchemaToItensCart = advertSchema.extend({
-  itemCart: z.number(),
-});
+export const AdvertSchemaToItensCart = advertSchema
+  .omit({
+    comments: true,
+    user: true,
+  })
+  .extend({
+    itemCart: z.number(),
+  });
 
 export const advertSchemaValidator = advertSchema
   .omit({

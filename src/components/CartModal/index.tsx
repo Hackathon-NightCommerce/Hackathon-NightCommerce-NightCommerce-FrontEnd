@@ -12,21 +12,19 @@ import {
 } from "@chakra-ui/react";
 import { useProduct } from "../../hooks/useProduct";
 import { ItemCart } from "../ItemCart";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { MdAttachMoney } from "react-icons/md";
 import { TAdvertItensCart } from "../../interfaces/advert.interface";
 import { CartShemaRequest } from "../../interfaces/cart.interfaces";
 
-export const CartModal = ({ onCloseCart, isOpenCart }: any) => {
-  const {
-    onCart,
-    total,
-    setTotal,
-    createCart,
-    payment,
-    spinnerCart,
-    setSpinnerCart,
-  } = useProduct();
+interface CartModalProps {
+  onCloseCart: () => void;
+  isOpenCart: boolean;
+}
+
+export const CartModal = ({ onCloseCart, isOpenCart }: CartModalProps) => {
+  const { onCart, total, setTotal, createCart, payment, spinnerCart } =
+    useProduct();
 
   useEffect(() => {
     const arrayPrice: number[] = [];

@@ -1,12 +1,11 @@
-import { StyledHome, StyledBannerPageHome, StyledSection } from "./style";
-import Banner from "../../assets/banner_bmw.png";
+import { StyledHome, StyledSection } from "./style";
 import { Button, ButtonGroup, Box } from "@chakra-ui/react";
 import { useProduct, useUser } from "../../hooks/useProduct";
 import { StyledContainer } from "../../styles/Container";
 import { useEffect } from "react";
 import { ListCards } from "../../components/listCards";
-import { CarouselCategors } from "../../components/CarouselCategors/CarouselCategors";
 import AsideFilters from "../../components/AsideFilters";
+import { CarouselCategors } from "../../components/ProjectsList";
 
 function Home() {
   const {
@@ -30,19 +29,9 @@ function Home() {
       pages.push(i + 1);
     }
   }
-  // console.log(page?.data)
   return (
     <StyledHome>
-      <StyledBannerPageHome>
-        <img src={Banner} alt="Banner" />
-        <h1>Night Commerce</h1>
-
-        <p>A melhor plataforma de comercio eletronico</p>
-      </StyledBannerPageHome>
-      <br />
-      <br />
-
-      <CarouselCategors />
+      {/* <CarouselCategors /> */}
       <StyledContainer>
         <AsideFilters />
         <StyledSection>
