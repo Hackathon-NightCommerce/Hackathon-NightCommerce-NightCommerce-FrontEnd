@@ -5,7 +5,7 @@ import { StyledContainer } from "../../styles/Container";
 import { useEffect } from "react";
 import { ListCards } from "../../components/listCards";
 import AsideFilters from "../../components/AsideFilters";
-import { CarouselCategors } from "../../components/ProjectsList";
+import { CarouselCategors } from "../../components/CarouselCategors";
 
 function Home() {
   const {
@@ -31,7 +31,7 @@ function Home() {
   }
   return (
     <StyledHome>
-      {/* <CarouselCategors /> */}
+      <CarouselCategors />
       <StyledContainer>
         <AsideFilters />
         <StyledSection>

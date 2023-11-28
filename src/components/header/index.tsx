@@ -59,7 +59,7 @@ export function Header({ children }: HeaderProps) {
   },[])
 
   return (
-    <Box as={"header"} position={"relative"} backgroundColor={"var(--brand1)"}>
+    <Box as={"header"} position={"relative"} backgroundColor={"var(--brand1)"} zIndex={100}>
       <Container
         maxWidth={"1300px"}
         height={isLargeThan769 ? "100px" : "164px"}

@@ -2,8 +2,8 @@ import { StyledProducts } from "./style";
 import { useEffect, useState } from "react";
 import { useProduct, useUser } from "./../../hooks/useProduct";
 import { useParams } from "react-router-dom";
-import { Box, Button, Image, Text, List, } from "@chakra-ui/react";
-import { useNavigate, } from "react-router-dom";
+import { Box, Button, Image, Text, List } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 import { FormComment } from "../../components/formComment";
 import { CommentItem } from "../../components/commentItem";
 import { StyledContainer } from "./../../styles/Container";
@@ -15,11 +15,10 @@ export function Products() {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const {  user,getAnnounceUser,announceListUser} = useUser();
+  const { user, getAnnounceUser, announceListUser } = useUser();
 
-  const { getAdvert, advert, page,getAdvertsByFilter} = useProduct();
+  const { getAdvert, advert, page, getAdvertsByFilter } = useProduct();
   const [couverImg, setCouverImg] = useState<string | undefined>();
-
 
   useEffect(() => {
     const fetchAdvert = async () => {
@@ -31,13 +30,14 @@ export function Products() {
     fetchAdvert();
   }, [id]);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (advert?.category) {
-      getAdvertsByFilter({categoryAdvert:[advert.category]})
-      getAnnounceUser(advert?.user.id!)
+      getAdvertsByFilter({ categoryAdvert: [advert.category] });
+      if (advert?.user.id) {
+        getAnnounceUser(advert.user.id);
+      }
     }
-  
-  },[advert])
+  }, [advert]);
 
   return (
     <StyledProducts>
@@ -99,8 +99,8 @@ export function Products() {
               gridTemplateColumns="repeat(3, 1fr)"
               gridTemplateRows="repeat(3, 1fr)"
             >
-              {/* {advert?.images &&
-                advert?.images.length > 1 &&
+              {advert?.images &&
+                advert?.images.length >= 1 &&
                 advert?.images.map((image) => (
                   <Image
                     key={image.id}
@@ -111,9 +111,8 @@ export function Products() {
                     objectFit="cover"
                     borderRadius="10px"
                     onClick={() => setCouverImg(image.image)}
-                 
                   />
-                ))} */}
+                ))}
               <Image
                 key={advert?.cover_image}
                 src={advert?.cover_image}
