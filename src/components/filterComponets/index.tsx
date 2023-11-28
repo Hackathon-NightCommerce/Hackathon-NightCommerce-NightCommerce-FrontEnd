@@ -10,6 +10,7 @@ export const FilterComponent = ({ title, filter, filterKey }: FilterProps) => {
   const { getAdvertsByFilter, filters } = useProduct();
 
   const handleFilterClick = (selectedValue: string): void => {
+  
     const newFilters = {
       ...filters,
       [filterKey]: selectedValue,
