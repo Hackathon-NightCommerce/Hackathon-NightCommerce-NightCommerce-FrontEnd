@@ -1,5 +1,5 @@
-import z from "zod"
-import { userSchema } from "./user.schema"
+import z from "zod";
+import { userSchema } from "./user.schema";
 
 export const imageGallerySchema = z.object({
   id: z.number(),
@@ -18,13 +18,18 @@ const commentsSchema = z.object({
 });
 
 export enum CategoryProduct {
-  Informatica = "Informatica",
-  Notekook = "Notebook",
-  Impressoras = "Impressoras",
-  SmartPhones = "SmartPhones",
-  Domestico = "Domestico",
-  Tvs = "Tvs",
-  Outros = "Outros",
+  Eletronicos = "Eletrônicos",
+  ModaEVestuario = "Moda e Vestuário",
+  CasaECozinha = "Casa e Cozinha",
+  LivrosEMidia = "Livros e Mídia",
+  BelezaECuidadosPessoais = "Beleza e Cuidados Pessoais",
+  EsportesELazer = "Esportes e Lazer",
+  BrinquedosEJogos = "Brinquedos e Jogos",
+  SaudeEBemEstar = "Saúde e Bem-Estar",
+  Automotivo = "Automotivo",
+  AlimentosEBebidas = "Alimentos e Bebidas",
+  MoveisEDecoracao = "Móveis e Decoração",
+  Outros = "outros",
 }
 
 export const advertSchema = z.object({
@@ -67,8 +72,8 @@ export const advertSchema = z.object({
 });
 
 export const AdvertSchemaToItensCart = advertSchema.extend({
- itemCart: z.number()
-})
+  itemCart: z.number(),
+});
 
 export const advertSchemaValidator = advertSchema
   .omit({
@@ -92,10 +97,8 @@ export const createAdvertSchemaValidator = advertSchema
 
 export type TAdvert = z.infer<typeof advertSchema>;
 
-export const updateAdvertSchema = createAdvertSchemaValidator
-  .partial()
-  .extend({
-    images: z.array(imageGallerySchema).or(z.array(z.string())).optional(),
-  });
+export const updateAdvertSchema = createAdvertSchemaValidator.partial().extend({
+  images: z.array(imageGallerySchema).or(z.array(z.string())).optional(),
+});
 
 export type TUpdateAdvert = z.infer<typeof updateAdvertSchema>;

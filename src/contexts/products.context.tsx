@@ -8,7 +8,7 @@ import { api } from "../services/api";
 import { useToast } from "@chakra-ui/react";
 import { useUser } from "./../hooks/useProduct";
 import { AxiosError } from "axios";
-import { TAdvert, TUpdateAdvert } from "../schemas/advert.schema";
+import { CategoryProduct, TAdvert, TUpdateAdvert } from "../schemas/advert.schema";
 import { TCommentRequest } from "../interfaces/comment.interface";
 import {CartShemaRequest} from '../interfaces/cart.interfaces';
 import { TProductsUserSalveAtCart } from "../interfaces/user.interface";
