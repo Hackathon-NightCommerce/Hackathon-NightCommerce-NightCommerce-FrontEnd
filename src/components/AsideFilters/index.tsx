@@ -16,6 +16,8 @@ const AsideFilters = () => {
   const { filters, getAdverts } = useProduct();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+
+
   const renderFilters = () => (
     <StyledAside>
       {filters?.nameAdvert && (

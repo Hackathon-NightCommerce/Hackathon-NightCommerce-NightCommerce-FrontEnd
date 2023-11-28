@@ -17,14 +17,9 @@ export function Products() {
 
   const {  user,getAnnounceUser,announceListUser} = useUser();
 
-  const { getAdvert, advert, page } = useProduct();
+  const { getAdvert, advert, page,getAdvertsByFilter} = useProduct();
   const [couverImg, setCouverImg] = useState<string | undefined>();
 
-  useEffect(() => {
-    if (advert && advert.user) {
-      getAnnounceUser(advert.user.id);
-    }
-  }, []);
 
   useEffect(() => {
     const fetchAdvert = async () => {
@@ -35,6 +30,14 @@ export function Products() {
     };
     fetchAdvert();
   }, [id]);
+
+  useEffect(()=>{
+    if (advert?.category) {
+      getAdvertsByFilter({categoryAdvert:[advert.category]})
+      getAnnounceUser(advert?.user.id!)
+    }
+  
+  },[advert])
 
   return (
     <StyledProducts>

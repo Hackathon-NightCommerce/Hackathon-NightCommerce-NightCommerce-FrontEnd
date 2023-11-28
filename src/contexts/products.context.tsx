@@ -101,9 +101,22 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
   const id = localStorage.getItem("@ID");
   const token = localStorage.getItem("@TOKEN");
 
-  const createCart = async () => {
+  const createCart = async (products:CartShemaRequest) => {
+
     try {
-      await api.post(`/cart`);
+      await api.post(`/cart`,products,{
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      toast({
+        title: `Produtos salvos no carrinho com sucesso`,
+        status: "success",
+        position: "top-right",
+        isClosable: true,
+      });
+      
     } catch (error) {
       console.error(error);
     }
@@ -232,6 +245,7 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
       api.get("/adverts/"),
       api.get("/adverts/adverts-filters"),
     ]);
+
 
     setPage(products.data);
     setFilters(filters.data);
@@ -382,8 +396,9 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
   };
 
   const getAdvertsByFilter = async (data: TFilters) => {
+  
     const query = queryParams(data);
-    console.log(query);
+    
 
     const [advertsFilter, productOption] = await Promise.all([
       api.get(`/adverts/filtered?${query}`),
