@@ -14,8 +14,8 @@ export const FilterComponent = ({ title, filter, filterKey }: FilterProps) => {
       ...filters,
       [filterKey]: selectedValue,
     };
+
     getAdvertsByFilter(newFilters);
-    
   };
 
   const filterArray = Array.isArray(filter) ? filter : Array.of(filter);
@@ -25,11 +25,13 @@ export const FilterComponent = ({ title, filter, filterKey }: FilterProps) => {
       <h1>{title}</h1>
       <ul>
         {filterArray.map((value: string) => {
-          const lines = value.split('\n');  
-          const firstLine = lines[0];  
+          const lines = value.split("\n");
+          const firstLine = lines[0];
           return (
             <li key={value} onClick={() => handleFilterClick(value)}>
-              <button className={filterArray.length <= 1 ? "select" : undefined}>
+              <button
+                className={filterArray.length <= 1 ? "select" : undefined}
+              >
                 {firstLine[0]?.toUpperCase() + firstLine.slice(1).split(" ")[0]}
               </button>
             </li>
@@ -38,5 +40,4 @@ export const FilterComponent = ({ title, filter, filterKey }: FilterProps) => {
       </ul>
     </StyledFilterComponent>
   );
-
 };

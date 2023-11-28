@@ -12,62 +12,60 @@ import {
 } from "@chakra-ui/react";
 import { useProduct } from "../../hooks/useProduct";
 import { ItemCart } from "../ItemCart";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { MdAttachMoney } from "react-icons/md";
 import { TAdvertItensCart } from "../../interfaces/advert.interface";
-import {CartShemaRequest} from '../../interfaces/cart.interfaces';
+import { CartShemaRequest } from "../../interfaces/cart.interfaces";
 
-export const CartModal = ({ onCloseCart, isOpenCart }: any) => {
-  const { onCart,total,setTotal,createCart,payment,spinnerCart,setSpinnerCart} = useProduct();
-  
+interface CartModalProps {
+  onCloseCart: () => void;
+  isOpenCart: boolean;
+}
 
+export const CartModal = ({ onCloseCart, isOpenCart }: CartModalProps) => {
+  const { onCart, total, setTotal, createCart, payment, spinnerCart } =
+    useProduct();
 
-  useEffect(()=>{
-    const arrayPrice: number[] = [] 
+  useEffect(() => {
+    const arrayPrice: number[] = [];
 
-    onCart.map((item)=>{
-      
-      if(item.itemCart === undefined){
-        arrayPrice.push(Number(item.price))
-    
-      }else{
-        arrayPrice.push(Number(item.price) * item.itemCart)
-       
+    onCart.map((item) => {
+      if (item.itemCart === undefined) {
+        arrayPrice.push(Number(item.price));
+      } else {
+        arrayPrice.push(Number(item.price) * item.itemCart);
       }
-    })
+    });
     const total = arrayPrice.reduce((accumulator, currentProduct) => {
       return accumulator + currentProduct;
     }, 0);
 
-    setTotal(total)
+    setTotal(total);
+  }, [onCart]);
 
-  },[onCart]);
-
-  const onSubmitSalveCart = async (products:TAdvertItensCart[])=>{
- 
+  const onSubmitSalveCart = async (products: TAdvertItensCart[]) => {
     const salveNewproductsCart: CartShemaRequest = {
       products: products.map((product) => ({
         advert_id: product.id,
         name: product.name,
-        qtd: Number(product.itemCart), 
-        price: Number(product.price), 
+        qtd: Number(product.itemCart),
+        price: Number(product.price),
       })),
     };
-    await createCart(salveNewproductsCart)
-  }
+    await createCart(salveNewproductsCart);
+  };
 
-  const onSubmitPayment = async (products:TAdvertItensCart[])=>{
- 
+  const onSubmitPayment = async (products: TAdvertItensCart[]) => {
     const paymentNewproducts: CartShemaRequest = {
       products: products.map((product) => ({
         advert_id: product.id,
         name: product.name,
-        qtd: Number(product.itemCart), 
-        price: Number(product.price), 
+        qtd: Number(product.itemCart),
+        price: Number(product.price),
       })),
     };
-    await payment(paymentNewproducts)
-  }
+    await payment(paymentNewproducts);
+  };
 
   return (
     <Modal
@@ -91,48 +89,52 @@ export const CartModal = ({ onCloseCart, isOpenCart }: any) => {
           </Box>
         </ModalBody>
         <Box
-        as="div"
-        padding={'20px'}
-        display={'flex'}
-        alignItems={'center'}
-        justifyContent={'space-between'}
+          as="div"
+          padding={"20px"}
+          display={"flex"}
+          alignItems={"center"}
+          justifyContent={"space-between"}
         >
-        <b>Total</b> 
-        
-        <span style={{
-          display:'flex',
-          alignItems:'center'
-        }}>
-          <MdAttachMoney/>{total.toFixed(2)}
-        </span>
+          <b>Total</b>
 
+          <span
+            style={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <MdAttachMoney />
+            {total.toFixed(2)}
+          </span>
         </Box>
         <ModalFooter>
           <Button variant="ghost" onClick={onCloseCart}>
             Fechar
           </Button>
-          <Button 
-          colorScheme="blue" mr={3}
-          onClick={()=>onSubmitSalveCart(onCart)}
+          <Button
+            colorScheme="blue"
+            mr={3}
+            onClick={() => onSubmitSalveCart(onCart)}
           >
             Salvar carrinho
           </Button>
-          {spinnerCart ? 
+          {spinnerCart ? (
             <Spinner
-            thickness='4px'
-            speed='0.65s'
-            emptyColor='gray.200'
-            color='blue.500'
-            size='xl'
-          />
-          :
-          <Button 
-          colorScheme="blue" mr={3}
-          onClick={()=>onSubmitPayment(onCart)}
-          >
-            Comprar
-          </Button>            
-        }
+              thickness="4px"
+              speed="0.65s"
+              emptyColor="gray.200"
+              color="blue.500"
+              size="xl"
+            />
+          ) : (
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => onSubmitPayment(onCart)}
+            >
+              Comprar
+            </Button>
+          )}
         </ModalFooter>
       </ModalContent>
     </Modal>

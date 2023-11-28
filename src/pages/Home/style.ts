@@ -21,7 +21,7 @@ export const StyledSection = styled.section`
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  width: 100%;
+  width: 80%;
 `;
 
 export const StyledBannerPageHome = styled.div`

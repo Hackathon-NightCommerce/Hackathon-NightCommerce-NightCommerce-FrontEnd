@@ -1,35 +1,37 @@
 import { ReactNode, createContext, useState } from "react";
-import { TAdvertItensCart, TCreateAdvertData, TPagination } from "../interfaces/advert.interface";
-import { api, apiKenzie } from "../services/api";
-import { TKenzieKars } from "../interfaces/kenzieKars.interface";
+import {
+  TAdvertItensCart,
+  TCreateAdvertData,
+  TPagination,
+} from "../interfaces/advert.interface";
+import { api } from "../services/api";
 import { useToast } from "@chakra-ui/react";
 import { useUser } from "./../hooks/useProduct";
 import { AxiosError } from "axios";
-import {
-  CategoryProduct,
-  TAdvert,
-  TUpdateAdvert,
-} from "../schemas/advert.schema";
+import { CategoryProduct, TAdvert, TUpdateAdvert } from "../schemas/advert.schema";
 import { TCommentRequest } from "../interfaces/comment.interface";
 import {CartShemaRequest} from '../interfaces/cart.interfaces';
 import { TProductsUserSalveAtCart } from "../interfaces/user.interface";
-import {useNavigate} from 'react-router-dom';
-
 interface iProductContextProps {
   children: ReactNode;
 }
 
 type TFilters = {
-  name?: string | undefined;
-  brand?: string | undefined;
-  price?: number | undefined;
-  description?: string | undefined;
-  cover_image?: string | undefined;
-  information_additional?: string | null | undefined;
-  category?: CategoryProduct | undefined;
-  published?: boolean | undefined;
-  qtd?: number | undefined;
-  promotion?: boolean | undefined;
+  nameAdvert?: string[] | undefined;
+  brandAdvert?: string[] | undefined;
+  categoryAdvert?: string[] | undefined;
+  promotionAdvert?: string[] | undefined;
+  minPrice?: number;
+  maxPrice?: number;
+};
+
+type TFiltersReq = {
+  brand?: string[] | undefined;
+  category?: string[] | undefined;
+  name?: string[] | undefined;
+  promotion?: string[] | undefined;
+  minPrice?: number;
+  maxPrice?: number;
 };
 type TErrorResponse = {
   message: {
@@ -40,6 +42,7 @@ interface IProductProvider {
   // Adverts
   getAdverts: () => void;
   getAdvertsByFilter: (data: TFilters) => Promise<void>;
+  getAdvertsSherad: (searchTerm: string) => void;
 
   // Pagination
   page: TPagination | undefined;
@@ -51,14 +54,6 @@ interface IProductProvider {
   filters: TFilters | null;
   setFilters: React.Dispatch<React.SetStateAction<TFilters | null>>;
 
-  // Kenzie Kars
-  getKenzieKarsInformation: () => Promise<void>;
-  getKenzieKarsByBrand: (brand: string) => Promise<void>;
-  kenzieKars: TKenzieKars[];
-  kenzieKarsBrands: string[];
-  kenzieKarModel: TKenzieKars | undefined;
-  getKenzieKar: (model: string) => Promise<void>;
-
   // Advert
   createAdvert: (data: TCreateAdvertData) => Promise<boolean>;
   getAdvert: (idAdvert: number) => Promise<void>;
@@ -68,7 +63,7 @@ interface IProductProvider {
   // Cart
   onCart: TAdvertItensCart[];
   setOnCart: React.Dispatch<React.SetStateAction<TAdvertItensCart[]>>;
-  total: number
+  total: number;
   setTotal: React.Dispatch<React.SetStateAction<number>>;
   createCart: (products: CartShemaRequest) => Promise<void>;
   getProductsSalveAtCart: () => Promise<void>;
@@ -84,7 +79,7 @@ interface IProductProvider {
     idAdvert: number
   ) => Promise<void>;
   deleteComment: (idComment: number, idAdvert: number) => Promise<void>;
-  uploadFile: (file: any) => void;
+  uploadFile: (file: File) => void;
 
   spinnerCart: boolean
   setSpinnerCart: React.Dispatch<React.SetStateAction<boolean>>
@@ -96,43 +91,48 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
   const [advert, setAdverts] = useState<TAdvert | undefined>();
   const [page, setPage] = useState<TPagination>();
   const [filters, setFilters] = useState<TFilters | null>(null);
-  const [kenzieKars, setKenzieKars] = useState<TKenzieKars[]>([]);
-  const [kenzieKarsBrands, setKenzieKarsBrands] = useState<string[]>([]);
   const [comments, setComments] = useState([]);
   const [onCart, setOnCart] = useState<TAdvertItensCart[]>([]);
   const [total, setTotal] = useState<number>(0.0);
   const [spinnerCart,setSpinnerCart] = useState<boolean>(false)
-
-  const [kenzieKarModel, setKenzieKarModel] = useState<
-    TKenzieKars | undefined
-  >();
 
   const toast = useToast();
   const { getAnnounceUser, announceListUser } = useUser();
   const id = localStorage.getItem("@ID");
   const token = localStorage.getItem("@TOKEN");
 
-  const createCart = async (products:CartShemaRequest) => {
-
+  const createCart = async () => {
     try {
-      const resullt = await api.post(`/cart`,products,{
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      toast({
-        title: `Produtos salvos no carrinho com sucesso`,
-        status: "success",
-        position: "top-right",
-        isClosable: true,
-      });
-      
+      await api.post(`/cart`);
     } catch (error) {
       console.error(error);
     }
   };
 
+  const adminDeleteAdvert = async (idAdvert: number, idUser: string) => {
+    try {
+      await api.delete(`/adverts/${idAdvert}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast({
+        title: `Anuncio deletado com sucesso 😁`,
+        status: "success",
+        position: "top-right",
+        isClosable: true,
+      });
+      getAnnounceUser(idUser);
+    } catch (error) {
+      toast({
+        title: `Ops, algum deu errado`,
+        status: "error",
+        position: "top-right",
+        isClosable: true,
+      });
+      console.log(error);
+    }
+  };
   const getProductsSalveAtCart = async():Promise<void>=>{
     try {
       const products:TProductsUserSalveAtCart = (await api.get('/cart',{
@@ -197,58 +197,9 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
       }
     }
   }
-
-  const adminDeleteAdvert = async (idAdvert: number, idUser: string) => {
-    try {
-      await api.delete(`/adverts/${idAdvert}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      toast({
-        title: `Anuncio deletado com sucesso 😁`,
-        status: "success",
-        position: "top-right",
-        isClosable: true,
-      });
-      getAnnounceUser(idUser);
-    } catch (error) {
-      toast({
-        title: `Ops, algum deu errado`,
-        status: "error",
-        position: "top-right",
-        isClosable: true,
-      });
-      console.log(error);
-    }
-  };
-
   const updateAdvert = async (id: number, data: TUpdateAdvert) => {
-    const { images, ...rest } = data;
+    const { ...rest } = data;
     try {
-      const listFilter = announceListUser?.adverts.find((ad) => ad.id == id);
-      const mapList = listFilter!.images.map(async (img) => {
-        let boolean = false;
-        let data;
-        let dataPatch;
-        images.map(async (imageData) =>
-          imageData.id == img.id
-            ? ((boolean = true), (dataPatch = imageData))
-            : (data = imageData)
-        );
-        boolean
-          ? await api.patch(`/adverts/images/${img.id}`, dataPatch, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            })
-          : await api.post(`/adverts/images/${id}`, data, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            });
-      });
-      await Promise.all(mapList);
       await api.patch(`/adverts/${id}`, rest, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -279,6 +230,16 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
   const getAdverts = async () => {
     const [products, filters] = await Promise.all([
       api.get("/adverts/"),
+      api.get("/adverts/adverts-filters"),
+    ]);
+
+    setPage(products.data);
+    setFilters(filters.data);
+  };
+
+  const getAdvertsSherad = async (searchTerm: string) => {
+    const [products, filters] = await Promise.all([
+      api.get(`/adverts/sherad/?product=${searchTerm}`),
       api.get("/adverts/adverts-filters"),
     ]);
 
@@ -375,7 +336,7 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
     }
   };
 
-  const uploadFile = async (file: any) => {
+  const uploadFile = async (file: File) => {
     try {
       const formData = new FormData();
       formData.append("file", file);
@@ -397,17 +358,16 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
     }
   };
 
-  const queryParams = (data: TFilters) => {
+  const queryParams = (data: TFiltersReq) => {
     const queryParam = new URLSearchParams();
 
     const filterKeys = {
-      name: data.name,
-      brand: data.brand,
-      price: data.price,
-      category: data.category,
-      published: data.published,
-      qtd: data.qtd,
-      promotion: data.promotion,
+      brandAdvert: data.brand,
+      categoryAdvert: data.category,
+      maxPrice: data.maxPrice,
+      minPrice: data.minPrice,
+      nameAdvert: data.name,
+      promotionAdvert: data.promotion,
     };
 
     for (const [key, value] of Object.entries(filterKeys)) {
@@ -423,12 +383,12 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
 
   const getAdvertsByFilter = async (data: TFilters) => {
     const query = queryParams(data);
+    console.log(query);
 
     const [advertsFilter, productOption] = await Promise.all([
       api.get(`/adverts/filtered?${query}`),
       api.get(`/adverts/adverts-filters?${query}`),
     ]);
-
     setPage(advertsFilter.data);
     setFilters(productOption.data);
   };
@@ -477,27 +437,6 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
     setPage(response.data);
   };
 
-  const getKenzieKarsInformation = async () => {
-    const response = await apiKenzie.get("/cars");
-    setKenzieKarsBrands(Object.keys(response.data));
-  };
-  const getKenzieKarsByBrand = async (brand: string) => {
-    const response = await apiKenzie.get(`/cars?brand=${brand}`);
-    setKenzieKars(response.data);
-  };
-  const getKenzieKar = async (name: string) => {
-    const kar = kenzieKars.find((kar) => kar.name == name);
-    if (kar?.fuel == 1) {
-      kar.fuel = "flex";
-    } else if (kar?.fuel == 2) {
-      kar.fuel = "hibrido";
-    } else if (kar?.fuel == 3) {
-      kar.fuel = "eletrico";
-    }
-
-    setKenzieKarModel(kar);
-  };
-
   const getComments = async () => {
     try {
       const id = localStorage.getItem("@ID-ADVERT");
@@ -542,19 +481,12 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
         filters,
         setFilters,
         getAdvertsByFilter,
+        getAdvertsSherad,
 
         // Pagination
         previusPage,
         nextPage,
         paginationByNumber,
-
-        // Kenzie Kars
-        getKenzieKarsByBrand,
-        kenzieKars,
-        kenzieKarsBrands,
-        getKenzieKarsInformation,
-        kenzieKarModel,
-        getKenzieKar,
 
         // Advert
         createAdvert,

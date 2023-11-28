@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled from "styled-components";
 
 const StyledFooter = styled.footer`
   background: var(--grey0);
@@ -9,7 +9,7 @@ const StyledFooter = styled.footer`
   flex-direction: column;
   width: 100%;
   margin-top: 50px;
-  a  {
+  a {
     color: var(--grey10);
   }
   @media (min-width: 600px) {
@@ -18,21 +18,10 @@ const StyledFooter = styled.footer`
     p {
       padding-right: 90px;
     }
-
-    img {
-      width: 150px;
-      height: 60px;
-    }
   }
 
-  p  {
+  p {
     color: var(--grey10);
-  }
-
-
-  img {
-    width: 250px;
-    height: 80ox;
   }
 
   button {
@@ -40,15 +29,10 @@ const StyledFooter = styled.footer`
     padding: 10px;
     width: 50px;
     height: 50px;
-
-    svg {
-      background: none;
-      color: var(--brand4);
-      margin: auto;
-      width: 30px;
-      cursor: pointer;
-    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-`
+`;
 
-export default StyledFooter
+export default StyledFooter;
