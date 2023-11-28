@@ -50,11 +50,6 @@ export const advertSchema = z.object({
     .or(z.number()),
 
   description: z.string(),
-
-  cover_image: z.string().refine((data) => data.length > 0, {
-    message: "Por favor, adicione uma imagem de capa",
-  }),
-
   information_additional: z.string(),
   category: z.nativeEnum(CategoryProduct),
   published: z.boolean(),
@@ -64,9 +59,9 @@ export const advertSchema = z.object({
       message: "Por favor, quantidade minima de 1 unidade",
     })
     .or(z.number().min(1)),
-
+  cover_image: z.string(),
   promotion: z.boolean(),
-  // images: z.array(imageGallerySchema),
+  images: z.array(imageGallerySchema).optional(),
   comments: z.array(commentsSchema),
   user: userSchema,
 });
@@ -80,30 +75,25 @@ export const AdvertSchemaToItensCart = advertSchema
     itemCart: z.number(),
   });
 
-export const advertSchemaValidator = advertSchema
-  .omit({
-    id: true,
-    user: true,
-    comments: true,
-  })
-  .extend({
-    images: z.array(z.string()).optional(),
-  });
+export const advertSchemaValidator = advertSchema.omit({
+  id: true,
+  user: true,
+  comments: true,
+});
 
 export const createAdvertSchemaValidator = advertSchema
   .omit({
     id: true,
     user: true,
     comments: true,
+    cover_image: true,
   })
   .extend({
-    images: z.array(z.string()).optional(),
+    images: z.array(z.string().url()).optional(),
   });
 
 export type TAdvert = z.infer<typeof advertSchema>;
 
-export const updateAdvertSchema = createAdvertSchemaValidator.partial().extend({
-  images: z.array(imageGallerySchema).or(z.array(z.string())).optional(),
-});
+export const updateAdvertSchema = createAdvertSchemaValidator.partial();
 
 export type TUpdateAdvert = z.infer<typeof updateAdvertSchema>;

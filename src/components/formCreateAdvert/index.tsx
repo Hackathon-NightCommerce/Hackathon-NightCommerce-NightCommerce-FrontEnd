@@ -1,12 +1,19 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { advertSchemaValidator } from "../../schemas/advert.schema";
+import { createAdvertSchemaValidator } from "../../schemas/advert.schema";
 import { TAdverData } from "../../interfaces/advert.interface";
-import { InputValidator, SelectValidator } from "../inputs";
+import { InputValidator } from "../inputs";
 import { useProduct } from "../../hooks/useProduct";
-import { ReactNode, useEffect, useState } from "react";
-import { Button, ButtonGroup, Checkbox, Input, border } from "@chakra-ui/react";
-import { StyledInputsContainer } from "./style";
+import { ReactNode, useState } from "react";
+import { Button, ButtonGroup, Checkbox, Select } from "@chakra-ui/react";
+import {
+  BannerCouser,
+  BannerImage,
+  ContanerBannerImage,
+  Erros,
+  StyledInputsContainer,
+} from "./style";
+import uploudBanner from "../../assets/uploudBanner.svg";
 
 interface IFormCreateAdvertProps {
   onClose: () => void;
@@ -17,50 +24,65 @@ export const FormCreateAdvert = ({
   onClose,
   children,
 }: IFormCreateAdvertProps) => {
-  const [imageInputCount, setImageInputCount] = useState(2);
-  const {
-    createAdvert,
-  } = useProduct();
-  const {register, handleSubmit, formState: { errors },} = useForm<TAdverData>({
+  const [files, setFile] = useState<File[]>();
 
-    resolver: zodResolver(advertSchemaValidator),
+  const { createAdvert } = useProduct();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<TAdverData>({
+    resolver: zodResolver(createAdvertSchemaValidator),
   });
 
-  const renderImageInput = () => {
-    const result = [];
-    for (let i = 0; i < imageInputCount; i++) {
-      result.push(
-        <InputValidator
-          id={`image${i}`}
-          key={`image${i}`}
-          label={`${i + 1}ª da galeria`}
-          placeholder="Insira a imagem de capa aqui"
-          error={errors.images?.message}
-          {...register(`images.${i}`)}
-        />
-      );
-    }
-    return result;
+  const handleFileChange = ({
+    target,
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = target.files?.[0];
+    setFile((prevFiles) =>
+      prevFiles
+        ? ([...prevFiles, selectedFile] as File[]).filter(Boolean)
+        : ([selectedFile] as File[]).filter(Boolean)
+    );
   };
 
-  const addImageInput = () => {
-    setImageInputCount(imageInputCount + 1);
-  };
+  async function getBase64(imageFile: File): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      if (!imageFile) {
+        reject(new Error("Nenhuma imagem fornecida."));
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.readAsDataURL(imageFile);
+
+      reader.onload = function () {
+        resolve(reader.result as string);
+      };
+
+      reader.onerror = function (error) {
+        reject(error);
+      };
+    });
+  }
 
   const submit: SubmitHandler<TAdverData> = async (data) => {
+    const images = await Promise.all(
+      files?.map((image) => getBase64(image)) || []
+    );
     const fullData = {
       ...data,
       price: Number(data.price),
-      qtd:Number(data.qtd)
+      qtd: Number(data.qtd),
+      images,
     };
-    console.log(fullData);
+
     const close = await createAdvert(fullData);
     if (close) {
       onClose();
     }
   };
-
-  console.log(errors)
 
   return (
     <form onSubmit={handleSubmit(submit)}>
@@ -71,7 +93,7 @@ export const FormCreateAdvert = ({
         error={errors.name?.message}
         {...register("name", { required: "Nome do produto" })}
       />
-      
+
       <InputValidator
         id="brand"
         placeholder="Marca do produto"
@@ -80,7 +102,6 @@ export const FormCreateAdvert = ({
         {...register("brand", { required: "Informe a marca" })}
       />
       <StyledInputsContainer>
-
         <InputValidator
           id="price"
           label="Preço"
@@ -98,29 +119,27 @@ export const FormCreateAdvert = ({
           {...register("qtd", { required: "Informe a quantidade no estoque" })}
         />
 
-        <Checkbox 
-        style={{
-          padding:'10px',
-          border:'1px solid var(--brand1)'
-        }}
-        id="promotion"
-        {...register("promotion", { required: "" })}
+        <Checkbox
+          style={{
+            padding: "10px",
+            border: "1px solid var(--brand1)",
+          }}
+          id="promotion"
+          {...register("promotion", { required: "" })}
         >
           Esse preço e promocional ?
-        
         </Checkbox>
 
-        <Checkbox 
-        style={{
-          padding:'10px',
-          border:'1px solid var(--brand1)'
-        }}
-        id="published"
-        defaultChecked={true}
-        {...register("published", { required: "" })}
+        <Checkbox
+          style={{
+            padding: "10px",
+            border: "1px solid var(--brand1)",
+          }}
+          id="published"
+          defaultChecked={true}
+          {...register("published", { required: "" })}
         >
           Deseja deixa publicado?
-        
         </Checkbox>
       </StyledInputsContainer>
       <InputValidator
@@ -137,40 +156,56 @@ export const FormCreateAdvert = ({
         label="Informação Adcional"
         placeholder="Informações extras do produto"
         error={errors.information_additional?.message}
-        {...register("information_additional", { required: "Informação Adcional" })}
+        {...register("information_additional", {
+          required: "Informação Adcional",
+        })}
       />
-      <InputValidator
-        type="text"
-        id="category"
-        label="Categoria do produto"
-        placeholder="Categoria do produto"
-        error={errors.category?.message}
-        {...register("category", { required: "Categoria do produto" })}
-      />
-
-      <InputValidator
-        id="cover_image"
-        label="Imagem de capa"
-        placeholder="Insira a imagem de capa aqui"
-        error={errors.cover_image?.message}
-        {...register("cover_image", { required: "Informe imagem de capa" })}
-      />
-      {renderImageInput()}
-      <Button
-        fontSize={"0.75rem"}
-        fontWeight={"bold"}
-        color={"var(--brand1)"}
-        backgroundColor={"var(--brand4)"}
-        transition={"0.5s"}
-        _hover={{
-          filter: "brightness(0.95)",
-          transition: "0.5s",
-        }}
-        marginBottom={"1rem"}
-        onClick={addImageInput}
+      <Select
+        placeholder="Selecione a categoria"
+        {...register("category", {
+          required: "Por favor, selecione a categoria",
+        })}
       >
-        Adicionar campo para imagem da galeria
-      </Button>
+        <option value="Eletrônicos">Eletrônicos</option>
+        <option value="Moda e Vestuário">Moda e Vestuário</option>
+        <option value="Casa e Cozinha">Casa e Cozinha</option>
+        <option value="Livros e Mídia">Livros e Mídia</option>
+        <option value="Beleza e Cuidados Pessoais">
+          Beleza e Cuidados Pessoais
+        </option>
+        <option value="Brinquedos e Jogos">Brinquedos e Jogos</option>
+        <option value="Saúde e Bem-Estar">Saúde e Bem-Estar</option>
+        <option value="Automotivo">Automotivo</option>
+        <option value="Alimentos e Bebida">Alimentos e Bebida</option>
+        <option value="Móveis e Decoração">Móveis e Decoração</option>
+      </Select>
+      {errors.category?.message && <Erros>{errors.category?.message}</Erros>}
+      <BannerCouser htmlFor="image">
+        <input
+          id="image"
+          type="file"
+          onChange={handleFileChange}
+          accept="image/*"
+        />
+
+        <div>
+          <figure>
+            <img
+              src={uploudBanner}
+              width={25}
+              height={25}
+              alt="imagem de perfil"
+            />
+          </figure>
+          <p>Arraste pra cá o arquivo ou aperte para adicionar</p>
+        </div>
+      </BannerCouser>
+
+      <ContanerBannerImage>
+        {files?.map((file, index) => (
+          <BannerImage src={URL.createObjectURL(file)} alt="" key={index} />
+        ))}
+      </ContanerBannerImage>
       <ButtonGroup width={"100%"} justifyContent={"space-between"}>
         {children}
         <Button

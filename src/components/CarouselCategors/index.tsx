@@ -1,4 +1,9 @@
-import { Card, DescripitionCategory, StylesProjectsList } from "./style";
+import {
+  Card,
+  DescripitionCategory,
+  StylesProjectsList,
+  TitleCategory,
+} from "./style";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Pagination, Navigation } from "swiper/modules";
 
@@ -16,21 +21,61 @@ import alimentosEBebidas from "../../assets/categoryIcons/AlimentosEBebidas.svg"
 import moveisEDecoracao from "../../assets/categoryIcons/MoveisEDecoracao.svg";
 
 const categorys = [
-  { category: "Eletrônicos", icon: eletronicos },
-  { category: "Moda e Vestuário", icon: modaEVestuario },
-  { category: "Casa e Cozinha", icon: casaECozinha },
-  { category: "Livros e Mídia", icon: livrosEMidia },
-  { category: "Beleza e Cuidados Pessoais", icon: belezaECuidadosPessoais },
-  { category: "Esportes e Lazer", icon: esportesELazer },
-  { category: "Brinquedos e Jogos", icon: brinquedosEJogos },
-  { category: "Automotivo", icon: automotivo },
-  { category: "Alimentos e Bebidas", icon: alimentosEBebidas },
-  { category: "Móveis e Decoração", icon: moveisEDecoracao },
+  {
+    category: "Eletrônicos",
+    icon: eletronicos,
+    description: "Explore a última tecnologia em eletrônicos.",
+  },
+  {
+    category: "Moda e Vestuário",
+    icon: modaEVestuario,
+    description: "Descubra as últimas tendências da moda.",
+  },
+  {
+    category: "Casa e Cozinha",
+    icon: casaECozinha,
+    description: "Encontre itens para decorar sua casa e cozinha.",
+  },
+  {
+    category: "Livros e Mídia",
+    icon: livrosEMidia,
+    description: "Explore livros e mídia para todos os gostos.",
+  },
+  {
+    category: "Beleza e Cuidados Pessoais",
+    icon: belezaECuidadosPessoais,
+    description: "Cuide de sua beleza e bem-estar.",
+  },
+  {
+    category: "Esportes e Lazer",
+    icon: esportesELazer,
+    description: "Equipe-se para seus esportes favoritos.",
+  },
+  {
+    category: "Brinquedos e Jogos",
+    icon: brinquedosEJogos,
+    description: "Diversão garantida com brinquedos e jogos.",
+  },
+  {
+    category: "Automotivo",
+    icon: automotivo,
+    description: "Produtos automotivos para seu veículo.",
+  },
+  {
+    category: "Alimentos e Bebidas",
+    icon: alimentosEBebidas,
+    description: "Descubra deliciosos alimentos e bebidas.",
+  },
+  {
+    category: "Móveis e Decoração",
+    icon: moveisEDecoracao,
+    description: "Transforme sua casa com móveis e decoração.",
+  },
 ];
 
 export function CarouselCategors() {
   const swiperConfig = {
-    effect: "coverflow",
+    effect: "slide",
     grabCursor: true,
     centeredSlides: true,
     loop: true,
@@ -59,20 +104,27 @@ export function CarouselCategors() {
           {categorys.map((category, index) => (
             <SwiperSlide key={index}>
               <Card>
-                <img src={category.icon} alt={category.category} />{" "}
+                <div>
+                  <img src={category.icon} alt={category.category} />
+                  <span>
+                    <TitleCategory>{category.category}</TitleCategory>
+                    <DescripitionCategory>
+                      {category.description}
+                    </DescripitionCategory>
+                  </span>
+                </div>
               </Card>
-              <DescripitionCategory>{category.category}</DescripitionCategory>
             </SwiperSlide>
           ))}
           <div className="slider-controler">
             <div className="swiper-button-prev slider-arrow">
-              <AiOutlineArrowLeft />
+              <AiOutlineArrowLeft color="white" />
             </div>
-            <div className="swiper-pagination"></div>
             <div className="swiper-button-next slider-arrow">
-              <AiOutlineArrowRight />
+              <AiOutlineArrowRight color="white " />
             </div>
           </div>
+          <div className="swiper-pagination"></div>
         </Swiper>
       </StylesProjectsList>
     </>
