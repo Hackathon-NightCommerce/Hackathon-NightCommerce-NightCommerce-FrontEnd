@@ -23,6 +23,15 @@ type TFilters = {
   minPrice?: number;
   maxPrice?: number;
 };
+
+type TFiltersReq = {
+  brand?: string[] | undefined;
+  category?: string[] | undefined;
+  name?: string[] | undefined;
+  promotion?: string[] | undefined;
+  minPrice?: number;
+  maxPrice?: number;
+};
 type TErrorResponse = {
   message: {
     [key: string]: unknown;
@@ -279,16 +288,16 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
     }
   };
 
-  const queryParams = (data: TFilters) => {
+  const queryParams = (data: TFiltersReq) => {
     const queryParam = new URLSearchParams();
 
     const filterKeys = {
-      brandAdvert: data.brandAdvert,
-      categoryAdvert: data.categoryAdvert,
+      brandAdvert: data.brand,
+      categoryAdvert: data.category,
       maxPrice: data.maxPrice,
       minPrice: data.minPrice,
-      nameAdvert: data.nameAdvert,
-      promotionAdvert: data.promotionAdvert,
+      nameAdvert: data.name,
+      promotionAdvert: data.promotion,
     };
 
     for (const [key, value] of Object.entries(filterKeys)) {
@@ -304,12 +313,12 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
 
   const getAdvertsByFilter = async (data: TFilters) => {
     const query = queryParams(data);
+    console.log(query);
 
     const [advertsFilter, productOption] = await Promise.all([
       api.get(`/adverts/filtered?${query}`),
       api.get(`/adverts/adverts-filters?${query}`),
     ]);
-
     setPage(advertsFilter.data);
     setFilters(productOption.data);
   };

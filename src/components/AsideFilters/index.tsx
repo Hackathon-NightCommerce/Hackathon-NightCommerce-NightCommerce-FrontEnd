@@ -19,13 +19,13 @@ const AsideFilters = () => {
   const renderFilters = () => (
     <StyledAside>
       {filters?.nameAdvert && (
-        <FilterComponent title="Nome Do produto" filterKey="nameAdvert" filter={filters.nameAdvert} />
+        <FilterComponent title="Nome Do produto" filterKey="name" filter={filters.nameAdvert} />
       )}
       {filters?.brandAdvert && (
-        <FilterComponent title="Marca" filterKey="brandAdvert" filter={filters.brandAdvert} />
+        <FilterComponent title="Marca" filterKey="brand" filter={filters.brandAdvert} />
       )}
       {filters?.categoryAdvert && (
-        <FilterComponent title="Categoria" filterKey="categoryAdvert" filter={filters?.categoryAdvert} />
+        <FilterComponent title="Categoria" filterKey="category" filter={filters?.categoryAdvert} />
       )}
       <div className="range_container">
         {filters?.minPrice && filters?.maxPrice && (
