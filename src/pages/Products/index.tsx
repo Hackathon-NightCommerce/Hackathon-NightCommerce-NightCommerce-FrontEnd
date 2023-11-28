@@ -2,8 +2,8 @@ import { StyledProducts } from "./style";
 import { useEffect, useState } from "react";
 import { useProduct, useUser } from "./../../hooks/useProduct";
 import { useParams } from "react-router-dom";
-import { Box, Button, Image, Text, List } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { Box, Button, Image, Text, List, } from "@chakra-ui/react";
+import { useNavigate, } from "react-router-dom";
 import { FormComment } from "../../components/formComment";
 import { CommentItem } from "../../components/commentItem";
 import { StyledContainer } from "./../../styles/Container";
@@ -15,7 +15,7 @@ export function Products() {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const { user, getAnnounceUser, announceListUser } = useUser();
+  const {  user,getAnnounceUser,announceListUser} = useUser();
 
   const { getAdvert, advert, page } = useProduct();
   const [couverImg, setCouverImg] = useState<string | undefined>();

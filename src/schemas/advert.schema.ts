@@ -1,5 +1,5 @@
-import z from "zod";
-import { userSchema } from "./user.schema";
+import z from "zod"
+import { userSchema } from "./user.schema"
 
 export const imageGallerySchema = z.object({
   id: z.number(),
@@ -67,8 +67,8 @@ export const advertSchema = z.object({
 });
 
 export const AdvertSchemaToItensCart = advertSchema.extend({
-  itemCart: z.number(),
-});
+ itemCart: z.number()
+})
 
 export const advertSchemaValidator = advertSchema
   .omit({

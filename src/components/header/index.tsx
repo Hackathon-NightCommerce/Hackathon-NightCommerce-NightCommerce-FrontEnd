@@ -19,7 +19,7 @@ import { IoCartOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { CartModal } from "../CartModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useProduct } from "../../hooks/useProduct";
 
 interface HeaderProps {
@@ -30,6 +30,7 @@ interface HeaderProps {
 export function Header({ children }: HeaderProps) {
   const { getAdvertsSherad } = useProduct();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { getProductsSalveAtCart} = useProduct();
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -50,6 +51,12 @@ export function Header({ children }: HeaderProps) {
   } = useDisclosure();
 
   const [isLargeThan769] = useMediaQuery("(min-width: 769px)");
+
+  useEffect(()=>{
+    
+    getProductsSalveAtCart()
+    
+  },[])
 
   return (
     <Box as={"header"} position={"relative"} backgroundColor={"var(--brand1)"}>

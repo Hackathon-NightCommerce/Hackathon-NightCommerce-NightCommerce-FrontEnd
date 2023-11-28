@@ -10,6 +10,9 @@ import { useUser } from "./../hooks/useProduct";
 import { AxiosError } from "axios";
 import { TAdvert, TUpdateAdvert } from "../schemas/advert.schema";
 import { TCommentRequest } from "../interfaces/comment.interface";
+import {CartShemaRequest} from '../interfaces/cart.interfaces';
+import { TProductsUserSalveAtCart } from "../interfaces/user.interface";
+import {useNavigate} from 'react-router-dom';
 
 interface iProductContextProps {
   children: ReactNode;
@@ -63,7 +66,10 @@ interface IProductProvider {
   onCart: TAdvertItensCart[];
   setOnCart: React.Dispatch<React.SetStateAction<TAdvertItensCart[]>>;
   total: number;
-  setTotal: React.Dispatch<React.SetStateAction<number>>;
+  setTotal: React.Dispatch<React.SetStateAction<number>>;;
+  createCart: (products: CartShemaRequest) => Promise<void>;
+  getProductsSalveAtCart: () => Promise<void>;
+  payment: (products: CartShemaRequest) => Promise<void>
 
   // Comments
   getComments: () => void;
@@ -75,8 +81,10 @@ interface IProductProvider {
     idAdvert: number
   ) => Promise<void>;
   deleteComment: (idComment: number, idAdvert: number) => Promise<void>;
-
   uploadFile: (file: File) => void;
+
+  spinnerCart: boolean
+  setSpinnerCart: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const ProductContext = createContext({} as IProductProvider);
@@ -88,19 +96,20 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
   const [comments, setComments] = useState([]);
   const [onCart, setOnCart] = useState<TAdvertItensCart[]>([]);
   const [total, setTotal] = useState<number>(0.0);
+  const [spinnerCart,setSpinnerCart] = useState<boolean>(false)
 
   const toast = useToast();
   const { getAnnounceUser, announceListUser } = useUser();
   const id = localStorage.getItem("@ID");
   const token = localStorage.getItem("@TOKEN");
 
-  // const createCart = async () => {
-  //   try {
-  //     await api.post(`/cart`);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  const createCart = async () => {
+    try {
+      await api.post(`/cart`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const adminDeleteAdvert = async (idAdvert: number, idUser: string) => {
     try {
@@ -428,6 +437,11 @@ export const ProductProvider = ({ children }: iProductContextProps) => {
         setOnCart,
         setTotal,
         total,
+        createCart,
+        getProductsSalveAtCart,
+        payment,
+        setSpinnerCart,
+        spinnerCart,
 
         // Comments
         getComments,

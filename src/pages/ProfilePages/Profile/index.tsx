@@ -49,14 +49,11 @@ export const Profile = ({ typeView }: TTypeView) => {
 
       const checkFileCsv = acceptedFiles[0].type === "text/csv";
 
-      if (checkFileCsv) {
-        await uploadFile(acceptedFiles[0]);
-        setTimeout(() => {
-          setSpinner(false);
-        }, 3000);
-        setTimeout(() => {
-          onClose();
-        }, 3000);
+      if(checkFileCsv){
+      
+       await uploadFile(acceptedFiles[0])
+       setTimeout(() => {setSpinner(false);}, 3000);
+       setTimeout(() => {onClose();}, 3000);
 
         setTimeout(() => {
           toast({
@@ -95,14 +92,14 @@ export const Profile = ({ typeView }: TTypeView) => {
           position={"relative"}
           height={"330px"}
           marginBottom={"270px"}
-          // marginBottom={{ base: "270px", sm: "170px" }}
+          
         >
           <Box
             className="userContainer"
             display={"flex"}
             flexDirection={"column"}
             backgroundColor={"var(--grey10)"}
-            // height={"400px"}
+          
             gap={"1rem"}
             position={"absolute"}
             top={"30%"}
